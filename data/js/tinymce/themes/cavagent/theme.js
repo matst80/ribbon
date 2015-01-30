@@ -413,6 +413,8 @@ tinymce.ThemeManager.add('cavagent', function(editor) {
 
 			var menus = createMenuButtons();
 
+			var settingItems = ['onclick','cmd','format'];
+
 			var menuMapping = {
 				'onclick':'click',
 				'text':'txt',
@@ -432,20 +434,26 @@ tinymce.ThemeManager.add('cavagent', function(editor) {
 				var nd = {isMce:1};
 				if (def)
 					console.log(def);
+				var sett = {};
 				for(i in menuMapping)
 				{
+					var val=null;
 					if (def && def[i])
-						nd[menuMapping[i]] = def[i];
+						val = def[i];
 					if (d[i])
-						nd[menuMapping[i]] = d[i];
+						val = d[i];
+					if (val) {
+						if (settingItems.indexOf(i))
+							sett[i] = val;
+						nd[menuMapping[i]] = val;
+					}
 				}
 				nd.txt = tinymce.translate(d.text);
 				if (d.text=='|') {
 					nd.isSeparator = true;
 				}
-				if (def)
-					console.log(nd);
-				nd.settings = $.extend(def,d);
+				
+				nd.elmData = sett;
 
 				return new cav.classes.menuitem(nd);
 			}
@@ -461,18 +469,31 @@ tinymce.ThemeManager.add('cavagent', function(editor) {
 						parent.addItem(newitem);
 					if (d.menu && d.menu.length)
 					{
-						parseMenu(d.menu,newitem);
+						parseMenu(d.menu,newitem,defaults);
 					}
 					if (d.menu && d.menu.items) {
+
 						parseMenu(d.menu.items,newitem,d.menu.itemDefaults);
-						console.log('menuitems....',d);
 					}
 				}
 			}
 
 			parseMenu(menus);
 
-			console.log('render',createToolbars());
+			function parseToolbar(node,parent) {
+				for(var i in node)
+				{
+					var d = node[i];
+					console.log(d);
+					if (d.items && d.items.length)
+					{
+						parseToolbar(d.itens);
+					}
+				}
+			}
+
+			parseToolbar(createToolbars());
+			
 
 			// Render a plain panel inside the inlineToolbarContainer if it's defined
 			panel = self.panel = Factory.create({
@@ -504,7 +525,9 @@ tinymce.ThemeManager.add('cavagent', function(editor) {
 
 			addAccessibilityKeys(panel);
 			show();
-
+			editor.on('execCommand',function() {
+				console.log(arguments);
+			});
 			editor.on('nodeChange', reposition);
 			editor.on('activate', show);
 			editor.on('deactivate', hide);

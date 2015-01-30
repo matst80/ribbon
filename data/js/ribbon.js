@@ -122,8 +122,10 @@
 				{
 					var b = bindings[i];
 					var bf = s[b];
-					if (bf)
+					if (bf) {
 						t.elm.bind(b,t,bf);
+						t.elm.bind(b,t,function() {console.log(b,this);});
+					}
 				}
 			}
 		},
@@ -143,6 +145,7 @@
 			}
 			t.items.push(item);
 			item.elm.appendTo(t.childContainer(t));
+			cav.triggerEvent('wd-itemadded',item);
 			return item;
 		},
 		addItem: function(items) {
@@ -158,9 +161,9 @@
 		html:'<li class="wd-menuitem" />',
 		childContainer:function() {
 			var ts = this.subelm;
-			var show = this.settings.show;
+			/*var show = this.settings.show;
 			if (show)
-				console.log(show);
+				console.log(show);*/
 			if (!ts)
 				this.subelm = ts = $('<ul class="wd-submenu" />').appendTo(this.elm);
 			return ts;
@@ -174,9 +177,16 @@
 				return false;
 			}
 			if (s.isMce) {
-				console.log(s.format,s.click);
+				var me = t.elm[0];
+				/*me.parent = function() {
+					console.trace(this);
+					return {
+						cancel:function(){}
+					};
+				};*/
+				me.settings = s.elmData;
 				t.elm.bind('mousedown',stopProp);
-				t.elm.bind('mouseup',stopProp);
+				//t.elm.bind('mouseup',stopProp);
 			}
 			if (s.isSeparator)
 				t.elm.addClass('wd-separator');
@@ -234,8 +244,6 @@
 		},
 		disabledUpdated:function() {
 			var t = this;
-			console.log('disbl input');
-			//t.parent.disabledUpdated.apply(t,arguments);
 			
 			t.valueElm.attr('disabled',t._disabled?'disabled':null);
 		},
@@ -412,7 +420,12 @@
 		menuItems:[],
 		tabs:[],
 		init:function(opt) {
-			this.settings = opt;
+			var t = this;
+			t.settings = opt;
+			cav.bindEvent('wd-itemadded',function() {
+				var h = t.root.outerHeight();
+				bdy.css('margin-top',h);
+			});
 		},
 		addMenu:function(d) {
 			var t = this;
@@ -445,7 +458,7 @@
 				var wh = $(this).scrollTop();
 				if (t.scrollTimer)
 					clearTimeout(t.scrollTimer)
-				var isScroll = (t.lastScroll<wh);
+				var isScroll = (t.lastScroll<wh && wh>150);
 				if (isScroll)
 					t.scrollTimer = setTimeout(removeScroll,globalSettings.scrollTimeout);
 				root.toggleClass('wd-scrolled',isScroll);
