@@ -25,8 +25,19 @@
 
 
 	var cav = {
-		classes : {}
+		classes : {},
+		events:[],
+		bindEvent:function(evt,cb) {
+			doc.addEventListener(evt,cb,false);
+		},
+		triggerEvent:function(evtname,data,elm) {
+			var evt = new Event(evtname);
+			$.extend(evt,data);
+			doc.dispatchEvent(evt);
+		}
 	};
+
+	
 
 
 	function createClass(name,parent,func) {
@@ -67,10 +78,25 @@
 		console.log('atom init');
 	}
 
+	cav.bindEvent('wd-item-disabled',function(e) {
+		console.log('gotevent',e);
+	});
+
 	var baseelm = createClass('baseelm',cavAtom,{
 		init: function(opt) {
 			var t = this;
-			t.disabled = false;
+			t._disabled = false;
+			Object.defineProperty(t,'disabled',{
+				get:function(){
+					return t._disabled;
+				},
+				set:function(v) {
+					if (t._disabled != v) {
+						t._disabled = v;
+						t.disabledUpdated();
+					}
+				}
+			});
 			t.items = [];
 			t.settings = opt||{};
 			t.create();
@@ -78,6 +104,11 @@
 				t.addItem(opt.items)
 				delete opt.items;
 			}
+		},
+		disabledUpdated:function() {
+			console.log('disbl baseelm');
+			cav.triggerEvent('wd-item-disabled', { item:this,disabled:this._disabled },this.elm[0]);
+			this.elm.toggleClass('wd-disabled',this._disabled);
 		},
 		create: function() {
 			var bindings = ['click','mouseup','mousedown','contextmenu','keyup','keypress','mouseenter','mouseleave'],
@@ -147,7 +178,8 @@
 	var btn = createClass('btn',baseelm,{
 		html:'<div class="wd-button" />',
 		click:function() {
-			console.log('unhandled click');
+			if (!this._disabled)
+				console.log('unhandled click');
 		},
 		createInner: function() {
 			var t = this;
@@ -160,12 +192,14 @@
 		events:['focus','blur','change','keyup','keydown','keypress'],
 		inptype:'text',
 		change:function() {
-			var s = this.settings;
-			if (s.change) {
-				s.change();
+			if (!this._disabled) {
+				var s = this.settings;
+				if (s.change) {
+					s.change();
+				}
+				else 
+					console.log('unhandled change',this);
 			}
-			else 
-				console.log('unhandled change',this);
 		},
 		addValue:function(v) {
 			(this.valueList||this.valueElm).append('<option value="'+v+'">'+v+'</option>');
@@ -175,6 +209,13 @@
 			$.each(d,function(i,v) {
 				t.addValue(v);
 			});
+		},
+		disabledUpdated:function() {
+			var t = this;
+			console.log('disbl input');
+			//t.parent.disabledUpdated.apply(t,arguments);
+			
+			t.valueElm.attr('disabled',t._disabled?'disabled':null);
 		},
 		createInput:function() {
 			return $('<input type="'+this.inptype+'" />');
@@ -233,6 +274,29 @@
 		}
 	});
 
+	createClass('selector',inp,{
+		events:['change'],
+		html:'<div class="wd-selector wd-input" />',
+		addValue:function(v) {
+			var t = this;
+			this.valueElm.append('<option>'+v+'</option>');
+			$('<div class="wd-selector-item" />').text(v).appendTo(t.cnt);
+		},
+		change:function() {
+			parent.change();
+			console.log('selector changed',this.getValue());
+		},
+		createInput:function() {
+			var ret = $('<select />').hide();
+			var t = this;
+			if (t.settings.multiple)
+				ret.attr('multiple','multiple');
+			t.cnt = $('<div class="wd-selector-cnt" />').appendTo(t.elm);
+			return ret;
+		},
+
+	});
+
 	createClass('toggleButton',btn,{
 		activeClass:'wd-sel-btn',
 		html:'<div class="wd-button wd-tgl-btn" />',
@@ -244,7 +308,7 @@
 			if (fnc)
 				fnc();
 			if (sett.change)
-				sett.change(st);
+				sett.change(state);
 		}
 	});
 
@@ -344,17 +408,24 @@
 			var tp = this.addTab({txt:'tab_page',autoopen:1,onopen:function() {
 				console.log('öppna tab_page');
 			}});
+			var regbtn = new tabbtn({txt:'btn1'});
+			var tbtn = new cav.classes.toggleButton({txt:'tbtn1',change:function(st) {
+				regbtn.disabled = st;
+				tinp.disabled = st;
+			}});
+			var tinp = new inp({txt:'btn1',defaultValue:'kalle',data:function(sel,cb) { 
+							console.log('dfdfd',arguments);
+							cb(['sklep2','sklop3']);
+						}});
+
 			tp.addItem([
 				new tabgroup({txt:'grp1',items:[
-					new tabbtn({txt:'btn1'}),
-					new cav.classes.toggleButton({txt:'tbtn1'}),
+					regbtn,
+					tbtn,
 					new tabbtn({txt:'btn2'})
 				]}),
 				new tabgroup({text:'grp2',items:[
-					new inp({txt:'btn1',defaultValue:'kalle',data:function(sel,cb) { 
-							console.log('dfdfd',arguments);
-							cb(['sklep2','sklop3']);
-						}}),
+					tinp,
 					new cav.classes.toggleButton({txt:'tbtn1'})
 				]})
 			]);
