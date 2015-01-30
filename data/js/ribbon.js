@@ -37,7 +37,17 @@
 		}
 	};
 
-	
+	var iconmap = {
+		'redo':'repeat',
+		'bullist':'list-ul',
+		'numlist':'list-ol'
+	}
+
+	function iconMap(d) {
+		if (iconmap[d])
+			return iconmap[d];
+		return d.replace('align','align-');
+	}
 
 
 	function createClass(name,parent,func) {
@@ -146,6 +156,8 @@
 			t.items.push(item);
 			item.elm.appendTo(t.childContainer(t));
 			cav.triggerEvent('wd-itemadded',item);
+			if (t.afterAdded)
+				t.afterAdded(item);
 			return item;
 		},
 		addItem: function(items) {
@@ -214,8 +226,19 @@
 				console.log('unhandled click');
 		},
 		createInner: function() {
-			var t = this;
-			t.elm.append($('<span class="wd-button-label wd-item-label" />').text(trans(t.settings.txt,t.settings.defaultText))).click(function(e) { t.click(e); });
+			var t = this,
+				s = t.settings;
+			function prop(e) {
+				e.stopPropagation();
+				return false;
+			}
+			var subelm = $('<span class="wd-button-label wd-item-label" />').text(trans(t.settings.txt,t.settings.defaultText));
+			t.elm.mousedown(prop).mouseup(prop);
+			if (s.icon)
+			{
+				subelm.addClass('fa fa-'+iconMap(s.icon));
+			}
+			t.elm.append(subelm).click(function(e) { t.click(e); });
 		}
 	});
 
@@ -371,9 +394,44 @@
 		}
 	});
 
+	createClass('buttongroup',baseelm,{
+		html:'<div class="wd-buttongroup cf" />',
+		afterAdded:function(i) {
+
+			//console.log('add',this.settings.data);
+		}
+	});
+
+	createClass('splitbutton',btn,{
+		html:'<div class="wd-button wd-splitbutton" />',
+		afterAdded:function(i) {
+			//console.log()
+			//console.log('add',this.settings.data);
+		}
+	});
+
+	createClass('menubutton',btn,{
+		html:'<div class="wd-button wd-menubutton" />',
+		childContainer:function() {
+			var ts = this.subelm;
+			/*var show = this.settings.show;
+			if (show)
+				console.log(show);*/
+			if (!ts)
+				this.subelm = ts = $('<ul class="wd-submenu" />').appendTo(this.elm);
+			return ts;
+		},
+		afterAdded:function(i) {
+			//console.log()
+			//console.log('add',this.settings.data);
+		}
+	});
+
+	
+
 	createClass('tab',baseelm,{
 		preInit:function(opt,rib) {
-			console.log(opt,rib);
+			//console.log(opt,rib);
 			this.ribbon = rib;
 			rib.tabs.push(this);
 		},
@@ -390,7 +448,6 @@
 			var t = this;
 			var s = t.settings;
 			var isOpen = t.isOpen;
-
 			for(i in t.ribbon.tabs) {
 				t.ribbon.tabs[i].close();
 			}

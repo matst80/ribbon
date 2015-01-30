@@ -1,6 +1,7 @@
 <html>
 <head>
 	<script type="text/javascript" src="//wd7.se/ql.js"></script>
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 	<style type="text/css">
 
 	body {
@@ -11,9 +12,12 @@
 		height:3000px;
 	}
 
+		.wd-r {
+			font-family: Verdana;
+		}
+
 		.wd-r * {
 			margin:0;
-			font-family: Verdana;
 			font-size: 12px;
 			padding: 0;
 		}
@@ -49,13 +53,13 @@
 		.wd-submenu .wd-menuitem {	
 			width: 100%;
 		}
-		.wd-menuitem>ul {
+		.wd-menuitem>ul, .wd-menubutton>ul {
 			display:none;
 			position: absolute;
 			background: #fff;
 		}
 		
-		.wd-menuitem:hover>ul {
+		.wd-menuitem:hover>ul, .wd-menubutton:hover>ul {
 			display:block;
 		}
 		.wd-tabgrp {
@@ -72,6 +76,15 @@
 
 		.wd-sel-btn, .wd-selected {
 			background-color: #ccc;
+		}
+
+		.wd-buttongroup {
+			border:solid 1px red;
+			float:left;
+		}
+
+		.wd-buttongroup .wd-button {
+			float:left;
 		}
 
 		.wd-button {
@@ -174,8 +187,8 @@ tinymce.init({
     ],
     /*external_plugins: {
         "myplugin": "/myplugins/myplugin.js"
-    }
-	skin_url: '/css/mytinymceskin',*/
+    }*/
+	skin_url: '/js/tinymce/skins/cav8',
 	theme:'cavagent',
 	language:'sv_SE',
     language_url:'/js/tinymce/langs/sv_SE.js',

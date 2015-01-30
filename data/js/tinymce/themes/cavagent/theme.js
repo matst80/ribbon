@@ -432,8 +432,6 @@ tinymce.ThemeManager.add('cavagent', function(editor) {
 
 			function convert(d,def) {
 				var nd = {isMce:1};
-				if (def)
-					console.log(def);
 				var sett = {};
 				for(i in menuMapping)
 				{
@@ -480,19 +478,106 @@ tinymce.ThemeManager.add('cavagent', function(editor) {
 
 			parseMenu(menus);
 
-			function parseToolbar(node,parent) {
-				for(var i in node)
+			var tbMapping = {
+				'onclick':'click',
+				'title':'txt',
+				'icon':'icon',
+				'tooltip':'tooltip',
+				'cmd':'cmd',
+				'format':'format',
+				'preview':'preview',
+				'textStyle':'textStyle',
+				'onPostRender':'postrender',
+				'onPreRender':'prerender',
+				'onshow':'show',
+				'html':'customHTML',
+				'onhide':'hide',
+				'context':'ctx'
+			}
+
+			function mapTb(d,def) {
+				var ret = {};
+				var nd = {isMce:1};
+				var sett = {};
+				for(i in tbMapping)
 				{
-					var d = node[i];
-					console.log(d);
-					if (d.items && d.items.length)
+					var val=null;
+					if (def && def[i])
+						val = def[i];
+					if (d[i])
+						val = d[i];
+					//console.log(i,val);
+					if (val) {
+						if (settingItems.indexOf(i))
+							sett[i] = val;
+						nd[tbMapping[i]] = val;
+					}
+				}
+				//if (nd.txt)
+					//nd.txt = tinymce.translate(nd.txt);
+				if (d.text=='|') {
+					nd.isSeparator = true;
+				}
+				 
+				nd.elmData = sett;
+				return nd;
+			}
+
+			var typeMapping = {
+				'toolbar':function(d,p) { 
+					return p;
+				},
+				'buttongroup':function(d,p) {
+					return new cav.classes.buttongroup({txt:'test',data:d});
+				},
+				'menubutton':function(d,p) {
+					var ret = new cav.classes.menubutton(mapTb(d.settings));
+					parseMenu(d.settings.menu.items,ret,d.settings.menu.itemDefaults);
+					return ret;
+				},
+				'splitbutton':function(d,p) {
+					//console.log('split',d);
+					return new cav.classes.btn(mapTb(d.settings));
+				},
+				'menu':function(d,p) {
+					return new cav.classes.menuitem(mapTb(d.settings));
+				},
+				'button':function(d,p) {
+					return new cav.classes.btn(mapTb(d.settings));
+				}
+			};
+
+			function tbconv(d,parent) {
+				var tp = typeMapping[d.type]; 
+				if (tp)
+					return tp(d,parent);
+				else {
+					console.log(d.type,d);
+					return parent;
+				}
+				
+			}
+
+			var tb = cavcms.ribbon.addTab({txt:'textedit',autoopen:true});
+
+			function parseToolbar(node,parent) {
+				//console.log('node',node);
+				if (node.items) {
+					for(var i in node.items)
 					{
-						parseToolbar(d.itens);
+						var d = node.items[i];
+						var newitem = tbconv(d,parent);
+						parent.addItem(newitem);
+						
+						if (d.items && d.items.length)
+						{
+							parseToolbar(d,newitem);
+						}
 					}
 				}
 			}
-
-			parseToolbar(createToolbars());
+			
+			parseToolbar(createToolbars(),tb);
 			
 
 			// Render a plain panel inside the inlineToolbarContainer if it's defined
