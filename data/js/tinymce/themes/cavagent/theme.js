@@ -482,6 +482,7 @@ tinymce.ThemeManager.add('cavagent', function(editor) {
 				'onclick':'click',
 				'title':'txt',
 				'icon':'icon',
+				'text':'txt',
 				'tooltip':'tooltip',
 				'cmd':'cmd',
 				'format':'format',

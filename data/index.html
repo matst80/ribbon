@@ -37,6 +37,7 @@
 			border-top:0;
 		}
 		.wd-menuitem, .wd-selector-item {
+			position: relative;
 			cursor: pointer;
 		}
 		.wd-menuitem:hover {
@@ -53,7 +54,14 @@
 		.wd-submenu .wd-menuitem {	
 			width: 100%;
 		}
+
+		.wd-submenu .wd-submenu {
+			position: absolute;
+			top:0;
+			left:100%;
+		}
 		.wd-menuitem>ul, .wd-menubutton>ul {
+			z-index: 1010;
 			display:none;
 			position: absolute;
 			background: #fff;
@@ -61,6 +69,7 @@
 		
 		.wd-menuitem:hover>ul, .wd-menubutton:hover>ul {
 			display:block;
+			list-style: none;
 		}
 		.wd-tabgrp {
 			border-right:solid 1px;
@@ -79,8 +88,9 @@
 		}
 
 		.wd-buttongroup {
-			border:solid 1px red;
+			border:solid 1px transparent;
 			float:left;
+			margin-right: 5px;
 		}
 
 		.wd-buttongroup .wd-button {
