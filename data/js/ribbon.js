@@ -24,7 +24,7 @@
 	}
 
 
-	var cav = {
+	var cav = w.cav = {
 		classes : {},
 		events:[],
 		bindEvent:function(evt,cb) {
@@ -158,12 +158,34 @@
 		html:'<li class="wd-menuitem" />',
 		childContainer:function() {
 			var ts = this.subelm;
+			var show = this.settings.show;
+			if (show)
+				console.log(show);
 			if (!ts)
-				ts = $('<ul class="wd-submenu" />').appendTo(this.elm);
+				this.subelm = ts = $('<ul class="wd-submenu" />').appendTo(this.elm);
 			return ts;
 		},
 		createInner:function() {
-			this.elm.append($('<span class="wd-menu-label wd-item-label" />').text(trans(this.settings.txt,this.settings.defaultText)));
+			var t = this;
+			var s = t.settings;
+
+			function stopProp(e) {
+				e.stopPropagation();
+				return false;
+			}
+			if (s.isMce) {
+				console.log(s.format,s.click);
+				t.elm.bind('mousedown',stopProp);
+				t.elm.bind('mouseup',stopProp);
+			}
+			if (s.isSeparator)
+				t.elm.addClass('wd-separator');
+			else if (s.customHTML)
+			{
+				this.elm.append(s.customHTML);
+			}
+			else
+				this.elm.append($('<span class="wd-menu-label wd-item-label" />').text(trans(this.settings.txt,this.settings.defaultText)));
 		}
 	});
 
@@ -195,7 +217,7 @@
 			if (!this._disabled) {
 				var s = this.settings;
 				if (s.change) {
-					s.change();
+					s.change(this.getValue());
 				}
 				else 
 					console.log('unhandled change',this);
@@ -222,11 +244,12 @@
 		},
 		setValue:function(v,triggerChange) {
 			this.valueElm.val(v);
+			console.log('inp set',v);
 			if (triggerChange)
 				this.valueElm.change();
 		},
 		getValue:function() {
-			return this.valueElm.val(v);
+			return this.valueElm.val();
 		},
 		createInner: function() {
 			var t = this;
@@ -276,15 +299,43 @@
 
 	createClass('selector',inp,{
 		events:['change'],
+		selectedClass:'wd-selected',
+		itemSelector:'wd-selector-item',
 		html:'<div class="wd-selector wd-input" />',
 		addValue:function(v) {
 			var t = this;
 			this.valueElm.append('<option>'+v+'</option>');
-			$('<div class="wd-selector-item" />').text(v).appendTo(t.cnt);
+			$('<div class="'+t.itemSelector+'" />').data('value',v).click(function() {
+				if (!t._disabled) {
+					t.setSelectedItem(this);
+				}
+			}).text(v).appendTo(t.cnt);
+		},
+		setSelectedItem:function(itm) {
+			var t = this;
+			t.cnt.find('.'+t.selectedClass).not($(itm)).removeClass(t.selectedClass);
+			var state = $(itm).toggleClass(t.selectedClass).hasClass(t.selectedClass);
+			t.setValue($(itm).data('value'));
+		},
+		findValueElement:function(v) {
+			var t = this;
+			var ret;
+			t.cnt.find('.'+t.itemSelector).each(function() {
+				if ($(this).data('value')==v)
+					ret = $(this);
+			});
+			return ret;
+		},
+		setValue:function(v) {
+			var t = this;
+			var velm = t.findValueElement(v);
+			t.parent.setValue.apply(t,[v,true]);
+			if (velm && !velm.hasClass(t.selectedClass))
+				t.setSelectedItem(velm);
 		},
 		change:function() {
-			parent.change();
-			console.log('selector changed',this.getValue());
+			this.parent.change.apply(this);
+			//console.log('selector changed',this.getValue());
 		},
 		createInput:function() {
 			var ret = $('<select />').hide();
@@ -405,7 +456,7 @@
 			/// Temporary
 			var tabgroup = cav.classes.tabgroup;
 			var tabbtn = cav.classes.btn;
-			var tp = this.addTab({txt:'tab_page',autoopen:1,onopen:function() {
+			var tp = this.addTab({txt:'tab_page',onopen:function() {
 				console.log('öppna tab_page');
 			}});
 			var regbtn = new tabbtn({txt:'btn1'});
@@ -429,12 +480,15 @@
 					new cav.classes.toggleButton({txt:'tbtn1'})
 				]})
 			]);
-			var tt = this.addTab({txt:'tab_tools'});
+			var tt = this.addTab({txt:'tab_tools',autoopen:1});
 			tt.addItem([
 				new tabgroup({txt:'grp3',items:[
-					new cav.classes.selectbox({
-						txt:'sel1',
-						data:['sklep','sklop']
+					new cav.classes.selector({
+						txt:'select',
+						change:function() {
+							console.log('bound change',arguments);
+						},
+						data:['a','b','c','d']
 					}),
 					new cav.classes.selectbox({
 						txt:'selasync',
