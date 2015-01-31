@@ -84,7 +84,7 @@ body {
 			color: #41518C;
 		}
 		.wd-submenu .wd-menuitem .wd-menu-label {
-			color: #41518C;
+			color: #2B4049;
 		}
 		.wd-submenu .wd-menuitem .wd-menu-label:hover {
 			color: #fff;
@@ -164,8 +164,8 @@ body {
 			font-weight: bold;
 		}
 		.wd-rib-tab.selected .wd-menu-label {
-			color: #41518C;
-			border-bottom: 3px solid #e67e22;
+			color: #2B4049;
+			border-bottom: 3px solid #5FA8DB;
 		}
 		/*.wd-rib-tab.selected:after {
 			content: "";
