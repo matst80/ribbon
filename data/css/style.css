@@ -16,14 +16,20 @@ body {
 	body p {
 		height:3000px;
 	}
+		.wd-r {
+			font-family: Verdana;
+		}
 
 		.wd-r * {
 			margin:0;
-			font-family: Verdana;
+			
 			font-size: 12px;
 			padding: 0;
 		}
 
+		.wd-r ul {
+			list-style: none;
+		}
 
 		.wd-rib-tabs, .wd-menu {
 			list-style: none;
@@ -93,7 +99,7 @@ body {
 			left: 0;
 			top: 100%;
 		}
-		.wd-menuitem>ul {
+		.wd-menuitem>ul, .wd-menubutton>ul {
 			display:none;
 			position: absolute;
 			background: #fff;
@@ -102,7 +108,10 @@ body {
 			top: 0;
 			left: 100%;
 		}
-		.wd-menuitem:hover>ul {
+		.wd-menubutton {
+			position: relative;
+		}
+		.wd-menuitem:hover>ul, .wd-menubutton:hover>ul {
 			display:block;
 		}
 		.wd-tabgrp {
