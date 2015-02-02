@@ -33,8 +33,9 @@ body {
 		.wd-r ul {
 			list-style: none;
 		}
-		.wd-menuitem.wd-mainmenu .wd-menu-label {
+		.wd-menuitem.wd-mainmenu >.wd-menu-label {
 			padding:15px 30px 15px 30px;
+			background: #5fa8db;
 		}
 		.wd-mainmenu:after {
 			content: "\f0c9";
@@ -163,9 +164,14 @@ body {
 		.wd-sel-btn {
 			background-color: #ccc;
 		}
-		.wd-buttongroup {
+		div .buttongroup:last-child, div .wd-tabgrp:last-child {
+			border-right: 0;
+		}
+		.wd-buttongroup, .wd-tabgrp {
 			float: left;
-			padding: 3px 0;
+			margin: 3px;
+			margin-right: 2px;
+			border-right: 1px solid #ddd;
 		}
 		.wd-button {
 			border: solid 1px transparent;
@@ -180,9 +186,9 @@ body {
 			background-color: #ddd;
 		}
 
-		.wd-button:hover:active {
+		/*.wd-button:hover:active {
 			border-color: #ddd;
-		}
+		}*/
 
 		.wd-scrolled .wd-ribbon {
 			max-height: 0px;
@@ -231,12 +237,11 @@ body {
 			display: block;
 		}
 
-		.wd-rib, .wd-rib-tab.selected {
+		.wd-rib-tab.selected {
 			background: rgba(255,255,255,1);
 		}
-
-		.wd-menubutton {
-
+		.wd-menubutton .wd-button-label.wd-item-label {
+		    line-height: 100%;
 		}
 
 		.wd-separator {
@@ -250,6 +255,9 @@ body {
 		}
 		.wd-rib>div.open {
 			display: block;
+		}
+		.wd-rib {
+			background-color: #EFEFEF;
 		}
 		.cf:after { 
 		   content: "."; 
