@@ -273,8 +273,14 @@
 			{
 				this.elm.append(s.customHTML);
 			}
-			else
-				this.elm.append($('<span class="wd-menu-label wd-item-label" />').text(trans(this.settings.txt,this.settings.defaultText)));
+			else {
+				t.txtElm = $('<span class="wd-menu-label wd-item-label" />').text(trans(this.settings.txt,this.settings.defaultText)).appendTo(this.elm);
+				if (s.icon)
+				{
+					t.txtElm.addClass('fa fa-'+iconMap(s.icon));
+				}
+			}
+			
 		}
 	});
 
