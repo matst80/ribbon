@@ -205,7 +205,7 @@ body {
 
 		.wd-rib-tab .wd-menu-label {
 			color: #999;
-			padding: 15px 20px;
+			padding: 13px 20px;
 		}
 		.wd-rib-tab.selected {
 			font-weight: bold;
@@ -246,7 +246,7 @@ body {
 
 		.wd-rib>div {
 			display: none;
-			min-height: 100px
+			/*min-height: 100px*/
 		}
 		.wd-rib>div.open {
 			display: block;
