@@ -16,20 +16,16 @@ body {
 	body p {
 		height:3000px;
 	}
-<<<<<<< HEAD
 		ul {
 			margin:0;
 			padding: 0;
 			list-style-type:none;
 		}
 		.wd-r {
-=======
-		.wd-r {
 			font-family: Verdana;
 		}
 
 		.wd-r * {
->>>>>>> origin/master
 			margin:0;
 			
 			font-size: 12px;
@@ -67,7 +63,7 @@ body {
 	        display: block;
 	        height: 15px;
 	        width: 15px;
-	        content: "\f078"; <--- this is your text. You can also use UTF-8 character codes as I do here
+	        content: "\f078"; 
 	    }
 		.wd-menuitem .wd-menu-label:hover {
 			background:#3d5560;
