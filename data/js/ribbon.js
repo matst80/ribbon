@@ -165,6 +165,7 @@
 				else 
 					return {error:'no default class'};
 			}
+			item.parentNode = t;
 			t.items.push(item);
 			item.elm.appendTo(t.childContainer(t));
 			cav.triggerEvent('wd-itemadded',item);
@@ -220,7 +221,7 @@
 			}
 			return t._active;
 		},
-		createInner:function() {
+		afterAdded:function() {
 			var t = this;
 			var s = t.settings;
 
@@ -233,8 +234,11 @@
 				s.active = function(v) {
 					t.active(v);
 				}
+				s.settings = s;
 				s.parent = function() {
-					return t.elm.parent();
+					if (t.parentNode)
+						return t.parentNode.elm;
+					return t.elm.parent().parent();
 				}
 			}
 
@@ -242,22 +246,27 @@
 				e.stopPropagation();
 				return false;
 			}
+
 			if (s.isMce) {
 				var me = t.elm[0];
-				console.log(s);
+				
 				mceFix();
-				/*me.parent = function() {
-					console.trace(this);
-					return {
-						cancel:function(){}
-					};
-				};*/
+				
 				if (s.postrender)
 					s.postrender();
+				if (s.textStyle) {
+					s.textStyle();
+				}
 				me.settings = s.elmData;
 				t.elm.bind('mousedown',stopProp);
 				//t.elm.bind('mouseup',stopProp);
 			}
+			t.elm.bind('mouseenter',function() { console.log('show'); $(this).trigger('show');}).bind('mouseleave',function() { $(this).trigger('hide');});
+		},
+		createInner:function() {
+			var t = this;
+			var s = t.settings;
+			
 			if (s.isSeparator)
 				t.elm.addClass('wd-separator');
 			else if (s.customHTML)
@@ -304,6 +313,7 @@
 			this.elm.append($('<span class="wd-tabgrp-label wd-item-label" />').text(trans(this.settings.txt,this.settings.defaultText)));
 		}
 	});
+	$.fn.cancel = function() {};
 
 	var btn = createClass('btn',baseelm,{
 		html:'<div class="wd-button" />',
@@ -326,6 +336,7 @@
 				s = t.settings;
 
 			function mceFix() {
+				s.settings = s;
 				s.disabled = function(v) {
 					if (v!=undefined)
 						t.disabled = v;
@@ -334,10 +345,12 @@
 				s.active = function(v) {
 					t.active(v);
 				}
+				
 				s.parent = function() {
-					return t.elm.parent();
+					return t.elm;
 				}
 			}
+
 
 			function prop(e) {
 				e.stopPropagation();
