@@ -462,7 +462,7 @@ tinymce.ThemeManager.add('cavagent', function(editor) {
 					var d = node[i];
 					var newitem = convert(d,defaults);
 					if (!parent)
-						cavcms.ribbon.addMenu(newitem);
+						cav.ribbon.addMenu(newitem);
 					else
 						parent.addItem(newitem);
 					if (d.menu && d.menu.length)
@@ -559,7 +559,7 @@ tinymce.ThemeManager.add('cavagent', function(editor) {
 				
 			}
 
-			var tb = cavcms.ribbon.addTab({txt:'textedit',autoopen:true});
+			var tb = cav.ribbon.addTab({txt:'textedit',autoopen:true});
 
 			function parseToolbar(node,parent) {
 				//console.log('node',node);

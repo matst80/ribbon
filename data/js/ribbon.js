@@ -36,6 +36,16 @@
 		return d.replace('align','align-');
 	}
 
+	function loadClass(cls,cb,err) {
+		ql.postload('cls_'+cls+".js",function() {
+			var cl = cav.classes[cls];
+			if (cl)
+				cb(cl);
+			else
+				err({error:'no class found'});
+		});
+	}
+
 	var cav = w.cav = {
 		classes : {},
 		
@@ -44,7 +54,6 @@
 			if (!localClass)
 			{
 				loadClass(cls,function(ret) {
-					cav.classes[cls] = ret;
 					cb(ret);
 				});
 			}
@@ -101,6 +110,38 @@
 
 	}
 
+	createClass('objecteditor',cavAtom, {
+		init:function(opt) {
+			var t = this;
+			t.items = {};
+			t.settings = opt||{};
+			t.ribbon = cav.ribbon;
+
+			function findEditable(n) {
+				var edt = n.attr('data-editor');
+				if (edt && edt.length) {
+					return {
+						node:n,
+						editor:edt.split(' ')
+					};
+				}
+			}
+
+			bdy.bind('click',function(e) {
+				console.log(e);
+			});
+		}
+	});	
+
+	createClass('baseeditor',cavAtom, {
+		init:function(opt) {
+			var t = this;
+			t.items = [];
+			t.settings = opt||{};
+			t.ribbon = cav.ribbon;
+		}
+	});
+
 
 	var baseelm = createClass('baseelm',cavAtom,{
 		init: function(opt) {
@@ -126,7 +167,6 @@
 			}
 		},
 		disabledUpdated:function() {
-			console.log('disbl baseelm');
 			cav.triggerEvent('wd-item-disabled', { item:this,disabled:this._disabled },this.elm[0]);
 			this.elm.toggleClass('wd-disabled',this._disabled);
 		},
@@ -136,17 +176,21 @@
 				s = this.settings;
 			t.elm = $(t.html||'<div />').data('wditem',t);
 			if (s.tooltip)
-				t.elm.attr('alt',s.tooltip);
+				t.elm.attr('title',s.tooltip);
 			if (t.createInner)
 				t.createInner();
 			if (s) {
 				for(i in bindings)
 				{
 					var b = bindings[i];
-					var bf = s[b];
-					if (bf) {
-						t.elm.bind(b,t,bf);
-						t.elm.bind(b,t,function() {console.log(b,this);});
+					var bfunc = s[b];
+					if (bfunc) {
+						(function(bf) {
+							t.elm.bind(b,t,function() { 
+							if (!t._disabled) 
+								bf.apply(this,arguments);
+							});
+						})(bfunc);
 					}
 				}
 			}
@@ -213,7 +257,8 @@
 			t.txtElm.text(txt);
 			if (s.icon)
 			{
-				t.txtElm.find('i').remove().prepend('<i />').addClass('fa fa-'+iconMap(s.icon));
+				t.txtElm.find('i').remove();
+				t.txtElm.prepend($('<i />').addClass('fa fa-'+iconMap(s.icon)));
 			}
 		},
 		createInner:function() {
@@ -308,7 +353,7 @@
 				t.txtElm = $('<span class="wd-menu-label wd-item-label" />').text(trans(this.settings.txt,this.settings.defaultText)).appendTo(this.elm);
 				if (s.icon)
 				{
-					t.txtElm.prepend('<i />').addClass('fa fa-'+iconMap(s.icon));
+					t.txtElm.prepend($('<i />').addClass('fa fa-'+iconMap(s.icon)));
 				}
 			}			
 		}
@@ -396,7 +441,7 @@
 			t.elm.mousedown(prop).mouseup(prop);
 			if (s.icon)
 			{
-				subelm.prepend('<i />').addClass('fa fa-'+iconMap(s.icon));
+				subelm.prepend($('<i />').addClass('fa fa-'+iconMap(s.icon)));
 			}
 			if (s.isMce) {
 				mceFix();
