@@ -24,7 +24,7 @@ tinymce.ThemeManager.add('cavagent', function(editor) {
 		tools: {title: 'Tools'}
 	};
 
-	var defaultToolbar = "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | " +
+	var defaultToolbar = "undo redo | styleselect removeformat | bold italic | alignleft aligncenter alignright alignjustify | " +
 		"bullist numlist outdent indent | link image";
 
 	/**
@@ -607,7 +607,7 @@ tinymce.ThemeManager.add('cavagent', function(editor) {
 			}*/
 
 			editor.fire('BeforeRenderUI');
-			panel.renderTo(inlineToolbarContainer || document.body).reflow();
+			//panel.renderTo(inlineToolbarContainer || document.body).reflow();
 
 			addAccessibilityKeys(panel);
 			show();

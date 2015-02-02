@@ -52,7 +52,8 @@
 	var iconmap = {
 		'redo':'repeat',
 		'bullist':'list-ul',
-		'numlist':'list-ol'
+		'numlist':'list-ol',
+		'removeformat':'eraser'
 	}
 
 	function iconMap(d) {
@@ -137,6 +138,8 @@
 				t = this,
 				s = this.settings;
 			t.elm = $(t.html||'<div />').data('wditem',t);
+			if (s.tooltip)
+				t.elm.attr('alt',s.tooltip);
 			if (t.createInner)
 				t.createInner();
 			if (s) {
@@ -206,9 +209,6 @@
 		activeClass:'wd-active',
 		childContainer:function() {
 			var ts = this.subelm;
-			/*var show = this.settings.show;
-			if (show)
-				console.log(show);*/
 			if (!ts) {
 				this.subelm = ts = $('<ul class="wd-submenu" />').appendTo(this.elm.addClass('wd-hassub'));
 			}
@@ -216,7 +216,6 @@
 		},
 		active:function(v) {
 			var t = this;
-			console.trace('menu active',v);
 			if (v!=undefined) {
 				t._active = v;
 				t.elm.toggleClass(t.activeClass,v);
@@ -226,7 +225,7 @@
 		afterCreated:function() {
 			var t = this;
 			var s = t.settings;
-			console.log('aftercreated');
+			
 			function mceFix() {
 				
 				s.disabled = function(v) {
@@ -241,9 +240,6 @@
 				//console.log('menusettings',s);
 				
 				s.parent = function() {				
-					t.parentNode.elm.bind('show',function() {
-						console.log(s.settings);
-					});
 					if (t.parentNode)
 						return t.parentNode.elm;
 					return t.elm.parent().parent();
@@ -263,16 +259,13 @@
 				mceFix();
 				
 				if (s.postrender) {
-					console.log(s.postrender);
 					s.postrender();
 				}
 				if (s.textStyle) {
 					s.textStyle();
 				}
-				t.elm.bind('mousedown',stopProp).bind('mouseup',stopProp);
-				
 			}
-			t.elm.bind('mouseenter',function() { t.elm.trigger('show');}).bind('mouseleave',function() { t.elm.trigger('hide');});
+			t.elm.bind('mouseenter',function() { console.log('show',t.elm[0]); t.elm.trigger('show');}).bind('mouseleave',function() { t.elm.trigger('hide');}).bind('mousedown',stopProp).bind('mouseup',stopProp);
 		},
 		createInner:function() {
 			var t = this;
@@ -634,6 +627,8 @@
 			return parseMulti(d,function(ret) {
 				t.menuItems.push(ret);
 				t.menu.append(ret.elm);
+				if (ret.afterCreated)
+					ret.afterCreated();
 				return ret;
 			});
 		},
