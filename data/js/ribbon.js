@@ -171,6 +171,8 @@
 			cav.triggerEvent('wd-itemadded',item);
 			if (t.afterAdded)
 				t.afterAdded(item);
+			if (item.afterCreated)
+				item.afterCreated(t);
 			return item;
 		},
 		addItem: function(items) {
@@ -221,10 +223,10 @@
 			}
 			return t._active;
 		},
-		afterAdded:function() {
+		afterCreated:function() {
 			var t = this;
 			var s = t.settings;
-
+			console.log('aftercreated');
 			function mceFix() {
 				
 				s.disabled = function(v) {
@@ -239,12 +241,15 @@
 				//console.log('menusettings',s);
 				
 				s.parent = function() {				
+					t.parentNode.elm.bind('show',function() {
+						console.log(s.settings);
+					});
 					if (t.parentNode)
 						return t.parentNode.elm;
 					return t.elm.parent().parent();
 				}
 
-				s.settings = s;
+				s.settings = s.elmData;
 			}
 
 			function stopProp(e) {
@@ -285,9 +290,7 @@
 				{
 					t.txtElm.addClass('fa fa-'+iconMap(s.icon));
 				}
-			}
-			t.afterAdded();
-			
+			}			
 		}
 	});
 
