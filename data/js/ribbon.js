@@ -200,6 +200,7 @@
 	
 	createClass('menuitem',baseelm,{
 		html:'<li class="wd-menuitem" />',
+		activeClass:'wd-active',
 		childContainer:function() {
 			var ts = this.subelm;
 			/*var show = this.settings.show;
@@ -210,9 +211,31 @@
 			}
 			return ts;
 		},
+		active:function(v) {
+			var t = this;
+			if (v!=undefined) {
+				t.active = v;
+				t.elm.toggleClass(t.activeClass,v);
+			}
+			return t.active;
+		},
 		createInner:function() {
 			var t = this;
 			var s = t.settings;
+
+			function mceFix() {
+				s.disabled = function(v) {
+					if (v!=undefined)
+						t.disabled = v;
+					return t._disabled;
+				}
+				s.active = function(v) {
+					t.active(v);
+				}
+				s.parent = function() {
+					return t.elm.parent();
+				}
+			}
 
 			function stopProp(e) {
 				e.stopPropagation();
@@ -221,12 +244,15 @@
 			if (s.isMce) {
 				var me = t.elm[0];
 				console.log(s);
+				mceFix();
 				/*me.parent = function() {
 					console.trace(this);
 					return {
 						cancel:function(){}
 					};
 				};*/
+				if (s.postrender)
+					s.postrender();
 				me.settings = s.elmData;
 				t.elm.bind('mousedown',stopProp);
 				//t.elm.bind('mouseup',stopProp);
@@ -257,7 +283,6 @@
 			return this.elm.hasClass('wd-showflyout');
 		},
 		childContainer:function(i) {
-			console.log(i.prototype);
 			return this.subelm;
 		},
 		createInner:function() {
