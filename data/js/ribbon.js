@@ -213,11 +213,12 @@
 		},
 		active:function(v) {
 			var t = this;
+			console.trace('active',v);
 			if (v!=undefined) {
-				t.active = v;
+				t._active = v;
 				t.elm.toggleClass(t.activeClass,v);
 			}
-			return t.active;
+			return t._active;
 		},
 		createInner:function() {
 			var t = this;
@@ -306,13 +307,38 @@
 
 	var btn = createClass('btn',baseelm,{
 		html:'<div class="wd-button" />',
+		activeClass:'wd-active',
 		click:function() {
 			if (!this._disabled)
 				console.log('unhandled click');
 		},
+		active:function(v) {
+			var t = this;
+			console.log('active',v);
+			if (v!=undefined) {
+				t._active = v;
+				t.elm.toggleClass(t.activeClass,v);
+			}
+			return t._active;
+		},
 		createInner: function() {
 			var t = this,
 				s = t.settings;
+
+			function mceFix() {
+				s.disabled = function(v) {
+					if (v!=undefined)
+						t.disabled = v;
+					return t._disabled;
+				}
+				s.active = function(v) {
+					t.active(v);
+				}
+				s.parent = function() {
+					return t.elm.parent();
+				}
+			}
+
 			function prop(e) {
 				e.stopPropagation();
 				return false;
@@ -322,6 +348,11 @@
 			if (s.icon)
 			{
 				subelm.addClass('fa fa-'+iconMap(s.icon));
+			}
+			if (s.isMce) {
+				mceFix();
+				if (s.postrender)
+					s.postrender();
 			}
 			t.elm.append(subelm).click(function(e) { t.click(e); });
 		}
