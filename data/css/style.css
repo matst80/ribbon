@@ -16,8 +16,12 @@ body {
 	body p {
 		height:3000px;
 	}
-
-		.wd-r * {
+		ul {
+			margin:0;
+			padding: 0;
+			list-style-type:none;
+		}
+		.wd-r {
 			margin:0;
 			font-family: Verdana;
 			font-size: 12px;
@@ -72,7 +76,7 @@ body {
 		}*/
 		
 		.wd-rib>div {
-
+			background: #EFEFEF;
 		}
 		.wd-submenu {	
 			min-width: 130px;
@@ -120,14 +124,18 @@ body {
 		.wd-sel-btn {
 			background-color: #ccc;
 		}
-
+		.wd-buttongroup {
+			float: left;
+			padding: 3px 0;
+		}
 		.wd-button {
 			border: solid 1px transparent;
 			cursor: pointer;
-			padding:4px 8px;
+			padding: 10px;
+			float: left;
 		}
 		.wd-button:hover {
-			background-color: #eee;
+			background-color: #FFF;
 		}
 		.wd-button:active {
 			background-color: #ddd;
@@ -185,7 +193,16 @@ body {
 		}
 
 		.wd-rib, .wd-rib-tab.selected {
-			background: rgba(255,255,255,0.5);
+			background: rgba(255,255,255,1);
+		}
+
+		.wd-menubutton {
+
+		}
+
+		.wd-separator {
+			height: 1px;
+			background: #EEE;
 		}
 
 		.wd-rib>div {
