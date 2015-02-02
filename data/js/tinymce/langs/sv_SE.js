@@ -62,6 +62,7 @@ tinymce.addI18n('sv_SE',{
 "Lower Roman": "Romerska gemener",
 "Name": "Namn",
 "Anchor": "Ankare",
+"Text saved":"Texten sparad",
 "You have unsaved changes are you sure you want to navigate away?": "Du har f\u00f6r\u00e4ndringar som du inte har sparat. \u00c4r du s\u00e4ker p\u00e5 att du vill navigera vidare?",
 "Restore last draft": "\u00c5terst\u00e4ll senaste utkast",
 "Special character": "Specialtecken",

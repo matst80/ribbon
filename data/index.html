@@ -198,8 +198,9 @@
 	</p>
 </div>
 <script type="text/javascript">
+	var wdpid = 1;
 	ql.load('/js/jquery-2.1.3.min.js','/js/ribbon.js',function() {
-		var rib = cavcms.ribbon;
+		var rib = cav.ribbon;
 		rib.create();
 		console.log(rib.menuItems);
 	});
@@ -210,11 +211,11 @@ tinymce.init({
     plugins: [
         "advlist autolink lists link image charmap print preview anchor",
         "searchreplace visualblocks code fullscreen",
-        "insertdatetime media table contextmenu paste"
+        "insertdatetime media table contextmenu paste cavsave"
     ],
-    /*external_plugins: {
-        "myplugin": "/myplugins/myplugin.js"
-    }*/
+    external_plugins: {
+        "cavsave": "/js/tinymce/plugins/cavsave/plugin.js"
+    },
 	skin_url: '/js/tinymce/skins/cav8',
 	theme:'cavagent',
 	language:'sv_SE',

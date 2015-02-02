@@ -23,9 +23,22 @@
 		return ret.length==1?ret[0]:ret;
 	}
 
+	var iconmap = {
+		'redo':'repeat',
+		'bullist':'list-ul',
+		'numlist':'list-ol',
+		'removeformat':'eraser'
+	}
+
+	function iconMap(d) {
+		if (iconmap[d])
+			return iconmap[d];
+		return d.replace('align','align-');
+	}
 
 	var cav = w.cav = {
 		classes : {},
+		
 		getClass:function(cls,cb) {
 			var localClass = cav.classes[cls];
 			if (!localClass)
@@ -48,19 +61,6 @@
 			doc.dispatchEvent(evt);
 		}
 	};
-
-	var iconmap = {
-		'redo':'repeat',
-		'bullist':'list-ul',
-		'numlist':'list-ol',
-		'removeformat':'eraser'
-	}
-
-	function iconMap(d) {
-		if (iconmap[d])
-			return iconmap[d];
-		return d.replace('align','align-');
-	}
 
 
 	function createClass(name,parent,func) {
@@ -98,12 +98,9 @@
 	}
 
 	cavAtom.prototype.init = function() {
-		console.log('atom init');
+
 	}
 
-	cav.bindEvent('wd-item-disabled',function(e) {
-		console.log('gotevent',e);
-	});
 
 	var baseelm = createClass('baseelm',cavAtom,{
 		init: function(opt) {
@@ -170,7 +167,10 @@
 			}
 			item.parentNode = t;
 			t.items.push(item);
-			item.elm.appendTo(t.childContainer(t));
+			if (t.reversedAdd)
+				item.elm.prependTo(t.childContainer(t));
+			else 
+				item.elm.appendTo(t.childContainer(t));
 			cav.triggerEvent('wd-itemadded',item);
 			if (t.afterAdded)
 				t.afterAdded(item);
@@ -186,21 +186,48 @@
 
 		
 	createClass('notificationcenter',baseelm,{
+		reversedAdd:true,
 		html:'<div class="wd-notificationholder" />'
 	});
 
 	createClass('notification',baseelm,{
 		html:'<div class="wd-notification" />',
+		defaultTimeout:5000,
 		close:function() {
-			this.elm.remove();
+			var t = this;
+			t.elm.addClass('wd-hide');
+			setTimeout(function() {
+				t.elm.remove();	
+			},500);
+		},
+		update:function(opt) {
+			if (opt) {
+				$.extend(this.settings,opt);
+				this.applySettings();
+			}
+		},
+		applySettings:function() {
+			var t = this,
+				s = t.settings,
+				txt = trans(s.txt||t.defaultText);
+			t.txtElm.text(txt);
+			if (s.icon)
+			{
+				t.txtElm.find('i').remove().prepend('<i />').addClass('fa fa-'+iconMap(s.icon));
+			}
 		},
 		createInner:function() {
 			var t = this,
 				s = t.settings,
-				txt = trans(s.txt||t.defaultText);
-			
-				t.txtElm = $('<span class="wd-item-label wd-notificationtext" />').text(txt).appendTo(t.elm.click(function() {t.close();}));
-			
+				txt = trans(s.txt||t.defaultText),
+				to = s.timeout||t.defaultTimeout;
+			if (!s.prom) {
+				t.hideTimer = setTimeout(function() {
+					t.close();
+				},to);
+			}
+			t.txtElm = $('<span class="wd-item-label wd-notificationtext" />').appendTo(t.elm.click(function() {t.close();}));
+			t.applySettings();
 		}
 	});
 	
@@ -281,7 +308,7 @@
 				t.txtElm = $('<span class="wd-menu-label wd-item-label" />').text(trans(this.settings.txt,this.settings.defaultText)).appendTo(this.elm);
 				if (s.icon)
 				{
-					t.txtElm.addClass('fa fa-'+iconMap(s.icon));
+					t.txtElm.prepend('<i />').addClass('fa fa-'+iconMap(s.icon));
 				}
 			}			
 		}
@@ -369,7 +396,7 @@
 			t.elm.mousedown(prop).mouseup(prop);
 			if (s.icon)
 			{
-				subelm.addClass('fa fa-'+iconMap(s.icon));
+				subelm.prepend('<i />').addClass('fa fa-'+iconMap(s.icon));
 			}
 			if (s.isMce) {
 				mceFix();
@@ -647,7 +674,9 @@
 			t.addNotification({txt:'readytoedit'});
 		},
 		addNotification:function(opt) {
-			this.notification.addItem(new cav.classes.notification(opt));
+			var not = new cav.classes.notification(opt);
+			this.notification.addItem(not);
+			return not;
 		},
 		initScroll: function() {
 			var t = this;
@@ -758,11 +787,7 @@
 			});
 		}
 	});
-
-	//Expose root object
-	w.cavcms = {
-		ribbon: new ribbon()
-	};
-
-
+	cav.ribbon = new ribbon();
+	
+	
 })(window,window.document,jQuery);fd('ribbon.js')
