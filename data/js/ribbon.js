@@ -41,19 +41,19 @@
 			var cl = cav.classes[cls];
 			if (cl)
 				cb(cl);
-			else
+			else if (err)
 				err({error:'no class found'});
 		});
 	}
 
 	var cav = w.cav = {
 		classes : {},
-		
 		getClass:function(cls,cb) {
 			var localClass = cav.classes[cls];
 			if (!localClass)
 			{
 				loadClass(cls,function(ret) {
+					console.log('loaded',ret);
 					cb(ret);
 				});
 			}
@@ -103,7 +103,7 @@
 
 
 	var cavAtom = function() {
-		this.init.apply(this,arguments);
+		
 	}
 
 	cavAtom.prototype.init = function() {
@@ -154,30 +154,37 @@
 		},
 		setCurrent:function(editor) {
 			var t = this;
+			function setCurr() {
+				t.currentEditor = editor;
+				t.showEditor(editor);
+			} 
 			if (t.currentEditor) {
 				if (t.currentEditor.id != editor.id) {
 					t.hideEditor(t.currentEditor);
-					t.showEditor(editor);
+					setCurr();
 				}
 			}
 			else {
-				t.currentEditor = editor;
-				t.showEditor(editor);
+				setCurr();
 			}
 		},
 		hideEditor:function(editor) {
-			editor.handler.hide();
+			if (editor.handler)
+				editor.handler.hide();
 		},
 		showEditor:function(editor) {
-			editor.handler.show();
+			if (editor.handler)
+				editor.handler.show();
 		},
 		loadEditor:function(n,cb) {
 			var t = this;
 			var ed = t.editors[n.id];
+			console.log('found editor',ed);
 			if (ed)
 				cb(ed);
 			else {
 				cav.getClass(n.editor[0],function(cls) {
+					console.log('loaded',cls);
 					cb(new cls(n));
 				},function(err) {
 					console.log(err);
@@ -190,18 +197,43 @@
 		init:function(opt) {
 			var t = this;
 			t.items = [];
-			t.settings = opt||{};
-			t.ribbon = cav.ribbon;
-			console.log('init base editor');
+			if (opt) {
+				t.node = $(opt.id);
+				t.settings = opt||{};
+		
+				t.ribbon = cav.ribbon;
+				console.log('init base editor');
+				
+				t.createGui();
+			}
+		},
+		createGui:function() {
+			var t = this;
+			if (!t.customGui) {
+				var nm = trans(t.editorName||'baseeditor');
+				var mainMenu = t.manu = new cav.classes.menuitem({txt:nm});
+				
+				t.items.push(mainMenu);
+				t.items.push(t.ribbon.addTab({txt:nm,autoopen:true}));
+			}
 		},
 		reinit:function() {
 			console.log('reinit base');
 		},
 		hide:function() {
-			console.log('hide');
+			var items = this.items;
+			for(var i in items)
+			{
+				items[i].hide();
+			}
 		},
 		show:function() {
 			console.log('show');
+			var items = this.items;
+			for(var i in items)
+			{
+				items[i].show();
+			}
 		}
 	});
 
@@ -210,6 +242,7 @@
 		init: function(opt) {
 			var t = this;
 			t._disabled = false;
+			/*
 			Object.defineProperty(t,'disabled',{
 				get:function(){
 					return t._disabled;
@@ -220,7 +253,7 @@
 						t.disabledUpdated();
 					}
 				}
-			});
+			});*/
 			t.items = [];
 			t.settings = opt||{};
 			t.create();
@@ -229,18 +262,34 @@
 				delete opt.items;
 			}
 		},
+		active:function(v) {
+			var t = this;
+			if (v!=undefined) {
+				t._active = v;
+				t.elm.toggleClass(t.activeClass,v);
+			}
+			return t._active;
+		},
+		disabled:function(v) {
+			if (v!=undefined && v!=this._disabled) {
+				this._disabled = v;
+				this.disabledUpdated();
+			}
+		},
 		hide:function() {
+			var t = this;
 			t._lastVisibleState = t.elm.is(':visible');
 			t.elm.hide();
 			if (t.hideChildren)
 				t.hideChildren();
 		},
-		unhide:function() {
-			if (t._lastVisibleState) {
+		show:function() {
+			var t = this;
+			//if (t._lastVisibleState) {
 				t.elm.show();
 				if (t.unhideChildren)
 					t.unhideChildren();
-			}
+			//}
 		},
 		disabledUpdated:function() {
 			cav.triggerEvent('wd-item-disabled', { item:this,disabled:this._disabled },this.elm[0]);
@@ -264,7 +313,7 @@
 						(function(bf) {
 							t.elm.bind(b,t,function() { 
 							if (!t._disabled) 
-								bf.apply(this,arguments);
+								bf.apply(t,arguments);
 							});
 						})(bfunc);
 					}
@@ -362,57 +411,28 @@
 			}
 			return ts;
 		},
-		active:function(v) {
+		parent:function() {
 			var t = this;
-			if (v!=undefined) {
-				t._active = v;
-				t.elm.toggleClass(t.activeClass,v);
-			}
-			return t._active;
+			if (t.parentNode)
+				return t.parentNode.elm;
+			return t.elm.parent().parent();
 		},
 		afterCreated:function() {
 			var t = this;
 			var s = t.settings;
 			
-			function mceFix() {
-				
-				s.disabled = function(v) {
-					if (v!=undefined)
-						t.disabled = v;
-					return t._disabled;
-				}
-				s.active = function(v) {
-					console.log('button active',v);
-					t.active(v);
-				}
-				//console.log('menusettings',s);
-				
-				s.parent = function() {				
-					if (t.parentNode)
-						return t.parentNode.elm;
-					return t.elm.parent().parent();
-				}
-
-				s.settings = s.elmData;
-			}
-
 			function stopProp(e) {
 				e.stopPropagation();
 				return false;
 			}
-
-			if (s.isMce) {
-				var me = t.elm[0];
-				
-				mceFix();
-				
-				if (s.postrender) {
-					s.postrender();
-				}
-				if (s.textStyle) {
-					s.textStyle();
-				}
+			
+			if (s.postrender) {
+				s.postrender.apply(t);
 			}
+			if (s.textStyle) {
+				s.textStyle.apply(t);
+			}
+			
 			t.elm.bind('mouseenter',function() { console.log('show',t.elm[0]); t.elm.trigger('show');}).bind('mouseleave',function() { t.elm.trigger('hide');}).bind('mousedown',stopProp).bind('mouseup',stopProp);
 		},
 		createInner:function() {
@@ -480,51 +500,26 @@
 			if (!this._disabled)
 				console.log('unhandled click');
 		},
-		active:function(v) {
-			var t = this;
-			console.log('active',v);
-			if (v!=undefined) {
-				t._active = v;
-				t.elm.toggleClass(t.activeClass,v);
-			}
-			return t._active;
-		},
 		createInner: function() {
 			var t = this,
 				s = t.settings;
-
-			function mceFix() {
-				s.settings = s;
-				s.disabled = function(v) {
-					if (v!=undefined)
-						t.disabled = v;
-					return t._disabled;
-				}
-				s.active = function(v) {
-					t.active(v);
-				}
-				
-				s.parent = function() {
-					return t.elm;
-				}
-			}
-
 
 			function prop(e) {
 				e.stopPropagation();
 				return false;
 			}
-			var subelm = $('<span class="wd-button-label wd-item-label" />').text(trans(t.settings.txt,t.settings.defaultText));
+			var subelm = $('<span class="wd-button-label wd-item-label" />');
+			if (!s.notext)
+				subelm.text(trans(t.settings.txt,t.settings.defaultText));
 			t.elm.mousedown(prop).mouseup(prop);
 			if (s.icon)
 			{
 				subelm.prepend($('<i />').addClass('fa fa-'+iconMap(s.icon)));
 			}
-			if (s.isMce) {
-				mceFix();
-				if (s.postrender)
-					s.postrender();
-			}
+			
+			if (s.postrender)
+				s.postrender.apply(t);
+			
 			t.elm.append(subelm).click(function(e) { t.click(e); });
 		}
 	});
@@ -731,6 +726,17 @@
 			if (s.autoopen)
 				this.open();
 		},
+		show:function() {
+			var t = this;
+			t.tabItem.show();	
+			//t.elm.show();
+			t.open();
+		},
+		hide:function() {
+			var t = this;
+			t.close();
+			t.tabItem.hide();
+		},
 		open: function() {
 			var t = this;
 			var s = t.settings;
@@ -829,8 +835,8 @@
 			}});
 			var regbtn = new tabbtn({txt:'btn1'});
 			var tbtn = new cav.classes.toggleButton({txt:'tbtn1',change:function(st) {
-				regbtn.disabled = st;
-				tinp.disabled = st;
+				regbtn.disabled(st);
+				tinp.disabled(st);
 			}});
 			var tinp = new inp({txt:'btn1',defaultValue:'kalle',data:function(sel,cb) { 
 							console.log('dfdfd',arguments);

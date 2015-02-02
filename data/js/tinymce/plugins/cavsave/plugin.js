@@ -52,14 +52,14 @@ tinymce.PluginManager.add('cavsave', function(editor) {
 
 
 	function save(isAutoSave) {
-		if (editor.isDirty()) {
+		//if (editor.isDirty()) {
 			var not = cav.ribbon.addNotification({icon:'spinner fa-spin',txt:editor.translate('Saving')});
 			console.log('spara!!!',isAutoSave===true);
 			setTimeout(function() {
 				not.update({icon:'check',txt:editor.translate('Text saved')});
 			},500);
 			editor.fire('Saved');
-		}
+		//}
 	}
 
 	function startAutoSave() {
@@ -78,6 +78,7 @@ tinymce.PluginManager.add('cavsave', function(editor) {
 	settings.autosave_retention = parseTime(settings.autosave_retention, '20m');
 
 	function postRender() {
+		/*
 		var self = this;
 
 		self.disabled(editor.isDirty());
@@ -87,15 +88,10 @@ tinymce.PluginManager.add('cavsave', function(editor) {
 		});
 
 		startAutoSave();
+		*/
 	}
 
-	function restoreLastDraft() {
-		editor.undoManager.beforeChange();
-		restoreDraft();
-		removeDraft();
-		editor.undoManager.add();
-	}
-
+	
 	editor.addButton('save', {
 		title: 'Save',
 		onclick: save,

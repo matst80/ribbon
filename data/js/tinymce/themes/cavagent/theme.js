@@ -15,16 +15,15 @@ tinymce.ThemeManager.add('cavagent', function(editor) {
 
 	// Default menus
 	var defaultMenus = {
-		file: {title: 'File', items: 'newdocument'},
+		//file: {title: 'File', items: 'newdocument'},
 		edit: {title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall'},
 		insert: {title: 'Insert', items: '|'},
-		view: {title: 'View', items: 'visualaid |'},
-		format: {title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats | removeformat'},
+		view: {title: 'View', items: 'visualaid | code'},
+		format: {title: 'Format', items: 'formats | removeformat'},
 		table: {title: 'Table'},
-		tools: {title: 'Tools'}
 	};
 
-	var defaultToolbar = "undo redo | styleselect removeformat | bold italic | alignleft aligncenter alignright alignjustify | " +
+	var defaultToolbar = "save undo redo | styleselect removeformat | bold italic | alignleft aligncenter alignright alignjustify | " +
 		"bullist numlist outdent indent | link image";
 
 	/**
@@ -295,6 +294,7 @@ tinymce.ThemeManager.add('cavagent', function(editor) {
 	 * @param {tinymce.ui.Panel} panel Panel to add focus to.
 	 */
 	function addAccessibilityKeys(panel) {
+		/*
 		function focus(type) {
 			var item = panel.find(type)[0];
 
@@ -317,13 +317,14 @@ tinymce.ThemeManager.add('cavagent', function(editor) {
 
 		panel.on('cancel', function() {
 			editor.focus();
-		});
+		});*/
 	}
 
 	/**
 	 * Resizes the editor to the specified width, height.
 	 */
 	function resizeTo(width, height) {
+		/*
 		var containerElm, iframeElm, containerSize, iframeSize;
 
 		function getSize(elm) {
@@ -349,13 +350,13 @@ tinymce.ThemeManager.add('cavagent', function(editor) {
 		height = Math.max(settings.min_height || 100, height);
 		height = Math.min(settings.max_height || 0xFFFF, height);
 		DOM.setStyle(iframeElm, 'height', height);
-
+*/
 		editor.fire('ResizeEditor');
 	}
 
 	function resizeBy(dw, dh) {
-		var elm = editor.getContentAreaContainer();
-		self.resizeTo(elm.clientWidth + dw, elm.clientHeight + dh);
+		//var elm = editor.getContentAreaContainer();
+		//self.resizeTo(elm.clientWidth + dw, elm.clientHeight + dh);
 	}
 
 	/**
@@ -371,6 +372,7 @@ tinymce.ThemeManager.add('cavagent', function(editor) {
 		}
 
 		function reposition() {
+			/*
 			if (panel && panel.moveRel && panel.visible() && !panel._fixed) {
 				// TODO: This is kind of ugly and doesn't handle multiple scrollable elements
 				var scrollContainer = editor.selection.getScrollContainer(), body = editor.getBody();
@@ -385,21 +387,22 @@ tinymce.ThemeManager.add('cavagent', function(editor) {
 
 				panel.fixed(false).moveRel(body, editor.rtl ? ['tr-br', 'br-tr'] : ['tl-bl', 'bl-tl', 'tr-br']).moveBy(deltaX, deltaY);
 			}
+			*/
 		}
 
 		function show() {
-			if (panel) {
+			/*if (panel) {
 				panel.show();
 				reposition();
 				DOM.addClass(editor.getBody(), 'mce-edit-focus');
-			}
+			}*/
 		}
 
 		function hide() {
-			if (panel) {
+			/*if (panel) {
 				panel.hide();
 				DOM.removeClass(editor.getBody(), 'mce-edit-focus');
-			}
+			}*/
 		}
 
 		function render() {
@@ -451,18 +454,22 @@ tinymce.ThemeManager.add('cavagent', function(editor) {
 					nd.isSeparator = true;
 				}
 				
-				nd.elmData = sett;
+				//nd.elmData = sett;
 
 				return new cav.classes.menuitem(nd);
 			}
+
+			var cavedit = settings.editorReference;
 
 			function parseMenu(node,parent,defaults) {
 				for(var i in node)
 				{
 					var d = node[i];
 					var newitem = convert(d,defaults);
-					if (!parent)
+					if (!parent) {
+						cavedit.items.push(newitem);
 						cav.ribbon.addMenu(newitem);
+					}
 					else
 						parent.addItem(newitem);
 					if (d.menu && d.menu.length)
@@ -480,7 +487,7 @@ tinymce.ThemeManager.add('cavagent', function(editor) {
 
 			var tbMapping = {
 				'onclick':'click',
-				'title':'txt',
+				'title':'title',
 				'icon':'icon',
 				'text':'txt',
 				'tooltip':'tooltip',
@@ -560,6 +567,7 @@ tinymce.ThemeManager.add('cavagent', function(editor) {
 			}
 
 			var tb = cav.ribbon.addTab({txt:'textedit',autoopen:true});
+			cavedit.items.push(tb);
 
 			function parseToolbar(node,parent) {
 				//console.log('node',node);
@@ -580,7 +588,7 @@ tinymce.ThemeManager.add('cavagent', function(editor) {
 			
 			parseToolbar(createToolbars(),tb);
 			
-
+/*
 			// Render a plain panel inside the inlineToolbarContainer if it's defined
 			panel = self.panel = Factory.create({
 				type: inlineToolbarContainer ? 'panel' : 'floatpanel',
@@ -598,7 +606,7 @@ tinymce.ThemeManager.add('cavagent', function(editor) {
 					createToolbars()
 				]
 			});
-
+*/
 			// Add statusbar
 			/*if (settings.statusbar !== false) {
 				panel.add({type: 'panel', classes: 'statusbar', layout: 'flow', border: '1 0 0 0', items: [
@@ -611,10 +619,8 @@ tinymce.ThemeManager.add('cavagent', function(editor) {
 
 			addAccessibilityKeys(panel);
 			show();
-			editor.on('execCommand',function() {
-				console.log(arguments);
-			});
-			editor.on('nodeChange', reposition);
+			
+			//editor.on('nodeChange', reposition);
 			editor.on('activate', show);
 			editor.on('deactivate', hide);
 
@@ -622,7 +628,7 @@ tinymce.ThemeManager.add('cavagent', function(editor) {
 		}
 
 		settings.content_editable = true;
-
+/*
 		editor.on('focus', function() {
 			// Render only when the CSS file has been loaded
 			if (args.skinUiCss) {
@@ -631,8 +637,14 @@ tinymce.ThemeManager.add('cavagent', function(editor) {
 				render();
 			}
 		});
+*/
+		if (args.skinUiCss) {
+				tinymce.DOM.styleSheetLoader.load(args.skinUiCss, render, render);
+		} else {
+			render();
+		}
 
-		editor.on('blur hide', hide);
+		//editor.on('blur hide', hide);
 
 		// Remove the panel when the editor is removed
 		editor.on('remove', function() {
@@ -650,91 +662,7 @@ tinymce.ThemeManager.add('cavagent', function(editor) {
 		return {};
 	}
 
-	/**
-	 * Renders the iframe editor UI.
-	 *
-	 * @param {Object} args Details about target element etc.
-	 * @return {Object} Name/value object with theme data.
-	 */
-	function renderIframeUI(args) {
-		var panel, resizeHandleCtrl, startSize;
-
-		if (args.skinUiCss) {
-			tinymce.DOM.loadCSS(args.skinUiCss);
-		}
-
-		// Basic UI layout
-		panel = self.panel = Factory.create({
-			type: 'panel',
-			role: 'application',
-			classes: 'tinymce',
-			style: 'visibility: hidden',
-			layout: 'stack',
-			border: 1,
-			items: [
-				settings.menubar === false ? null : {type: 'menubar', border: '0 0 1 0', items: createMenuButtons()},
-				createToolbars(),
-				{type: 'panel', name: 'iframe', layout: 'stack', classes: 'edit-area', html: '', border: '1 0 0 0'}
-			]
-		});
-
-		if (settings.resize !== false) {
-			resizeHandleCtrl = {
-				type: 'resizehandle',
-				direction: settings.resize,
-
-				onResizeStart: function() {
-					var elm = editor.getContentAreaContainer().firstChild;
-
-					startSize = {
-						width: elm.clientWidth,
-						height: elm.clientHeight
-					};
-				},
-
-				onResize: function(e) {
-					if (settings.resize == 'both') {
-						resizeTo(startSize.width + e.deltaX, startSize.height + e.deltaY);
-					} else {
-						resizeTo(null, startSize.height + e.deltaY);
-					}
-				}
-			};
-		}
-
-		// Add statusbar if needed
-		if (settings.statusbar !== false) {
-			panel.add({type: 'panel', name: 'statusbar', classes: 'statusbar', layout: 'flow', border: '1 0 0 0', ariaRoot: true, items: [
-				{type: 'elementpath'},
-				resizeHandleCtrl
-			]});
-		}
-
-		if (settings.readonly) {
-			panel.find('*').disabled(true);
-		}
-
-		editor.fire('BeforeRenderUI');
-		panel.renderBefore(args.targetNode).reflow();
-
-		if (settings.width) {
-			tinymce.DOM.setStyle(panel.getEl(), 'width', settings.width);
-		}
-
-		// Remove the panel when the editor is removed
-		editor.on('remove', function() {
-			panel.remove();
-			panel = null;
-		});
-
-		// Add accesibility shortkuts
-		addAccessibilityKeys(panel);
-
-		return {
-			iframeContainer: panel.find('#iframe')[0].getEl(),
-			editorContainer: panel.getEl()
-		};
-	}
+	
 
 	/**
 	 * Renders the UI for the theme. This gets called by the editor.
