@@ -117,6 +117,7 @@
 			t.settings = opt||{};
 			t.ribbon = cav.ribbon;
 
+
 			function findEditable(n) {
 				var edt = n.data('editor');
 				if (edt && edt.length) {
@@ -135,11 +136,40 @@
 			bdy.bind('click',function(e) {
 				var n = findEditable($(e.target));
 				if (n && n.editor) {
-					t.loadEditor(n,function(edt) {
-
-					});
+					var oldEditor = t.editors[n.id];
+					if (oldEditor && oldEditor.handler)
+					{
+						oldEditor.handler.reinit();
+						t.setCurrent(oldEditor);
+					}
+					else {
+						t.loadEditor(n,function(edt) {
+							n.handler = edt;
+							t.editors[n.id] = n;
+							t.setCurrent(n);
+						});
+					}
 				}
 			});
+		},
+		setCurrent:function(editor) {
+			var t = this;
+			if (t.currentEditor) {
+				if (t.currentEditor.id != editor.id) {
+					t.hideEditor(t.currentEditor);
+					t.showEditor(editor);
+				}
+			}
+			else {
+				t.currentEditor = editor;
+				t.showEditor(editor);
+			}
+		},
+		hideEditor:function(editor) {
+			editor.handler.hide();
+		},
+		showEditor:function(editor) {
+			editor.handler.show();
 		},
 		loadEditor:function(n,cb) {
 			var t = this;
@@ -163,6 +193,15 @@
 			t.settings = opt||{};
 			t.ribbon = cav.ribbon;
 			console.log('init base editor');
+		},
+		reinit:function() {
+			console.log('reinit base');
+		},
+		hide:function() {
+			console.log('hide');
+		},
+		show:function() {
+			console.log('show');
 		}
 	});
 
@@ -188,6 +227,19 @@
 			if (opt && opt.items) {
 				t.addItem(opt.items)
 				delete opt.items;
+			}
+		},
+		hide:function() {
+			t._lastVisibleState = t.elm.is(':visible');
+			t.elm.hide();
+			if (t.hideChildren)
+				t.hideChildren();
+		},
+		unhide:function() {
+			if (t._lastVisibleState) {
+				t.elm.show();
+				if (t.unhideChildren)
+					t.unhideChildren();
 			}
 		},
 		disabledUpdated:function() {
