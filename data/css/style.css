@@ -339,16 +339,19 @@ body {
 			border: 1px solid #ddd;
 		}
 		.wd-tgl-btn:before {
-			content:"\f070";
+			/*content:"\f070";*/
+			content:"\f204";
 			display: inline-block;
 			font-family: 'FontAwesome';
 			color: #CCC;
 			margin-right: 5px;
+			font-size: 14px;
 		}
 		.wd-tgl-btn.wd-sel-btn:before {
-			/*color: #5FA8DB;*/
-			color: #000;
-			content:"\f06e";
+			color: #5FA8DB;
+			/*color: #000;
+			content:"\f06e";*/
+			content:"\f205";
 		}
 		.wd-tgl-btn.wd-sel-btn {
 			background: #FFF;
@@ -359,9 +362,12 @@ body {
 		}
 		.wd-textinput input[type=text] {
 			float: left;
-			line-height: 30px;
+			line-height: 35px;
 			padding: 0 10px;
-			border: 1px solid #CCC;
+			border: 1px solid #DDD;
+		}
+		.wd-textinput input[type=text]:focus {
+			border: 1px solid #5FA8DB;
 		}
 		.wd-input-label {
 		    display: inline-block;
