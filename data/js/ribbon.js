@@ -176,8 +176,9 @@
 			/*var show = this.settings.show;
 			if (show)
 				console.log(show);*/
-			if (!ts)
-				this.subelm = ts = $('<ul class="wd-submenu" />').appendTo(this.elm);
+			if (!ts) {
+				this.subelm = ts = $('<ul class="wd-submenu" />').appendTo(this.elm.addClass('wd-hassub'));
+			}
 			return ts;
 		},
 		createInner:function() {
