@@ -261,6 +261,7 @@
 		},
 		createInner:function() {
 			var t = this;
+			t.elm.append($('<span class="wd-menu-label wd-item-label" />').text(trans(this.settings.txt,this.settings.defaultText)));
 			var fl = t.flyout = $('<div class="wd-mainflyout" />').appendTo(t.elm.click(function() {}));
 			t.subelm = $('<ul class="wd-flyoutmenu" />').appendTo(fl);
 		}
