@@ -16,16 +16,14 @@ body {
 	body p {
 		height:3000px;
 	}
-		ul {
-			margin:0;
-			padding: 0;
-			list-style-type:none;
-		}
+
+	
 		.wd-r {
 			font-family: Verdana;
 		}
 
 		.wd-r * {
+
 			margin:0;
 			
 			font-size: 12px;
