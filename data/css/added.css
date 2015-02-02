@@ -12,4 +12,12 @@
 			background-color: red;
 		}
 
-		
+		.wd-notificationholder {
+			position: fixed;
+			left:0;
+			bottom: 0;
+		}
+
+		.wd-notification {
+			background-color: #ccc;
+		}

@@ -26,6 +26,18 @@
 
 	var cav = w.cav = {
 		classes : {},
+		getClass:function(cls,cb) {
+			var localClass = cav.classes[cls];
+			if (!localClass)
+			{
+				loadClass(cls,function(ret) {
+					cav.classes[cls] = ret;
+					cb(ret);
+				});
+			}
+			else cb(localClass);
+		},
+		createClass:createClass,
 		events:[],
 		bindEvent:function(evt,cb) {
 			doc.addEventListener(evt,cb,false);
@@ -166,8 +178,22 @@
 		}
 	});
 
-	
+		
+	createClass('notificationcenter',baseelm,{
+		html:'<ul class="wd-notificationholder" />'
+	});
 
+	createClass('notification',baseelm,{
+		html:'<li class="wd-notification" />',
+		createInner:function() {
+			var t = this,
+				s = t.settings,
+				txt = trans(s.txt||t.defaultText);
+			
+				t.txtElm = $('<span class="wd-item-label wd-notificationtext" />').text(txt).appendTo(t.elm);
+			
+		}
+	});
 	
 	createClass('menuitem',baseelm,{
 		html:'<li class="wd-menuitem" />',
@@ -504,9 +530,15 @@
 			var ribbon = t.ribbonRoot = $('<section class="wd-ribbon cf" />').appendTo(root);
 			var ribTabs = t.ribbonTabs = $('<ul class="wd-rib-tabs wd-li-left cf" />').appendTo(ribbon);
 			var ribs = t.ribbonHolder = $('<section class="wd-rib cf" />').appendTo(ribbon);
+			var not = t.notification = new cav.classes.notificationcenter({});
+			not.elm.appendTo(bdy).addClass('wd-r');
 			t.createBaseMenu();
 			t.createBaseRibbon();
 			t.initScroll();
+			t.addNotification({txt:'readytoedit'});
+		},
+		addNotification:function(opt) {
+			this.notification.addItem(new cav.classes.notification(opt));
 		},
 		initScroll: function() {
 			var t = this;
