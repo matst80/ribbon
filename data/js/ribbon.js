@@ -37,8 +37,10 @@
 	}
 
 	function loadClass(cls,cb,err) {
-		ql.postload('cls_'+cls+".js",function() {
+		ql.postload('/js/cls_'+cls+".js",function() {
+			
 			var cl = cav.classes[cls];
+			console.log(cl,cav.classes,cls);
 			if (cl)
 				cb(cl);
 			else
@@ -113,23 +115,46 @@
 	createClass('objecteditor',cavAtom, {
 		init:function(opt) {
 			var t = this;
-			t.items = {};
+			t.editors = {};
 			t.settings = opt||{};
 			t.ribbon = cav.ribbon;
 
 			function findEditable(n) {
-				var edt = n.attr('data-editor');
+				var edt = n.data('editor');
 				if (edt && edt.length) {
 					return {
-						node:n,
+						id:n.attr('id'),
 						editor:edt.split(' ')
 					};
+				}
+				else {
+					var prt = n.parent();
+					if (prt.length && prt[0].nodeName!='body')
+						return findEditable(prt);
 				}
 			}
 
 			bdy.bind('click',function(e) {
-				console.log(e);
+				var n = findEditable($(e.target));
+				if (n && n.editor) {
+					t.loadEditor(n,function(edt) {
+
+					});
+				}
 			});
+		},
+		loadEditor:function(n,cb) {
+			var t = this;
+			var ed = t.editors[n.id];
+			if (ed)
+				cb(ed);
+			else {
+				cav.getClass(n.editor[0],function(cls) {
+					console.log(cls);
+				},function(err) {
+					console.log(err);
+				});
+			}
 		}
 	});	
 
@@ -717,6 +742,7 @@
 			t.createBaseRibbon();
 			t.initScroll();
 			t.addNotification({txt:'readytoedit'});
+			t.editor = new cav.classes.objecteditor({ribbon:t});
 		},
 		addNotification:function(opt) {
 			var not = new cav.classes.notification(opt);
