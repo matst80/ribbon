@@ -88,6 +88,8 @@ body {
 		.wd-menuitem.wd-active .wd-menu-label {
 			background: #FFF;
 			border-left: 3px solid #5FA8DB;
+			border-top: 1px solid #ededed;
+			border-bottom: 1px solid #ededed;
 		}
 		
 		.wd-menu-label {
@@ -102,8 +104,8 @@ body {
 		.wd-menuitem .wd-hassub >.wd-menu-label:before, .wd-menubutton .wd-hassub >.wd-menu-label:before {
 	        position:absolute;
 	        font-family: 'FontAwesome';
-	        right:10px;
-	        font-size: 15px;
+	        right:5px;
+	        font-size: 13px;
 	        color: #2B4049;
 	        top: 50%;
 	        margin-top: -7px;
@@ -331,6 +333,43 @@ body {
 			background: #f1783c;
 			color: #FFF;
 		}
+		.wd-tgl-btn {
+			/*padding-left: 25px;*/
+			position: relative;
+			border: 1px solid #ddd;
+		}
+		.wd-tgl-btn:before {
+			content:"\f070";
+			display: inline-block;
+			font-family: 'FontAwesome';
+			color: #CCC;
+			margin-right: 5px;
+		}
+		.wd-tgl-btn.wd-sel-btn:before {
+			/*color: #5FA8DB;*/
+			color: #000;
+			content:"\f06e";
+		}
+		.wd-tgl-btn.wd-sel-btn {
+			background: #FFF;
+			border: 1px solid #5FA8DB;
+		}
+		.wd-textinput {
+			float: left;
+		}
+		.wd-textinput input[type=text] {
+			float: left;
+			line-height: 30px;
+			padding: 0 10px;
+			border: 1px solid #CCC;
+		}
+		.wd-input-label {
+		    display: inline-block;
+		    float: left;
+		    line-height: 30px;
+		}
+
+
 		.cf:after { 
 		   content: "."; 
 		   visibility: hidden; 
