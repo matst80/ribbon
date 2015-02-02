@@ -33,7 +33,22 @@ body {
 		.wd-r ul {
 			list-style: none;
 		}
-
+		.wd-menuitem.wd-mainmenu .wd-menu-label {
+			padding:15px 30px 15px 30px;
+		}
+		.wd-mainmenu:after {
+			content: "\f0c9";
+			position:absolute;
+	        font-family: 'FontAwesome';
+	        left:10px;
+	        font-size: 20px;
+	        color: #FFF;
+	        top: 50%;
+	        margin-top: -10px;
+	        display: block;
+	        height: 20px;
+	        width: 20px;
+		}
 		.wd-rib-tabs, .wd-menu {
 			list-style: none;
 			display: block;
@@ -50,7 +65,7 @@ body {
 		.wd-menuitem {
 			position: relative;
 		}
-		.wd-menu >.wd-menuitem:before {
+		.wd-menu >.wd-menuitem.wd-hassub:before {
 	        position:absolute;
 	        font-family: 'FontAwesome';
 	        right:10px;
@@ -75,6 +90,22 @@ body {
 		.wd-menuitem {
 			cursor: pointer;
 		}
+		.wd-menu .wd-menuitem .wd-hassub >.wd-menu-label:before {
+	        position:absolute;
+	        font-family: 'FontAwesome';
+	        right:10px;
+	        font-size: 15px;
+	        color: #2B4049;
+	        top: 50%;
+	        margin-top: -7px;
+	        display: block;
+	        height: 15px;
+	        width: 15px;
+	        content: "\f054"; 
+	    }
+	    .wd-menu >.wd-menuitem .wd-hassub >.wd-menu-label:hover:before {
+	        color: #FFF;
+	    }
 		/*.wd-menuitem:hover {
 			background-color: #ddd;
 
@@ -84,7 +115,7 @@ body {
 			background: #EFEFEF;
 		}
 		.wd-submenu {	
-			min-width: 130px;
+			min-width: 160px;
 			box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.2);
 			z-index: 100;
 		}
