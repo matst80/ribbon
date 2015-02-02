@@ -256,7 +256,8 @@
 		isOpen:function() {
 			return this.elm.hasClass('wd-showflyout');
 		},
-		childContainer:function() {
+		childContainer:function(i) {
+			console.log(i.prototype);
 			return this.subelm;
 		},
 		createInner:function() {
@@ -266,6 +267,7 @@
 				t.toggleSub();
 			}));
 			t.subelm = $('<ul class="wd-flyoutmenu" />').appendTo(fl);
+			t.subcnt = $('<ul class="wd-flyoutcnt" />').appendTo(fl);
 		}
 	});
 
