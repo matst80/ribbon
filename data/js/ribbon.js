@@ -38,9 +38,7 @@
 
 	function loadClass(cls,cb,err) {
 		ql.postload('/js/cls_'+cls+".js",function() {
-			
 			var cl = cav.classes[cls];
-			console.log(cl,cav.classes,cls);
 			if (cl)
 				cb(cl);
 			else
@@ -150,7 +148,7 @@
 				cb(ed);
 			else {
 				cav.getClass(n.editor[0],function(cls) {
-					console.log(cls);
+					cb(new cls(n));
 				},function(err) {
 					console.log(err);
 				});
@@ -164,6 +162,7 @@
 			t.items = [];
 			t.settings = opt||{};
 			t.ribbon = cav.ribbon;
+			console.log('init base editor');
 		}
 	});
 
@@ -419,6 +418,7 @@
 			this.elm.append($('<span class="wd-tabgrp-label wd-item-label" />').text(trans(this.settings.txt,this.settings.defaultText)));
 		}
 	});
+
 	$.fn.cancel = function() {};
 
 	var btn = createClass('btn',baseelm,{
