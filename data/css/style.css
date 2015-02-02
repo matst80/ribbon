@@ -355,7 +355,7 @@ body {
 			background: #FFF;
 			border: 1px solid #5FA8DB;
 		}
-		.wd-textinput {
+		.wd-input {
 			float: left;
 		}
 		.wd-textinput input[type=text] {
