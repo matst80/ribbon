@@ -13,8 +13,8 @@ body {
 		background:#fff url(../bg.jpg) 0 0;
 	}
 
-	body p {
-		height:3000px;
+	div.editor {
+		height: 3000px;
 	}
 
 	
