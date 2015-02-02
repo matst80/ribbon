@@ -447,7 +447,7 @@ tinymce.ThemeManager.add('cavagent', function(editor) {
 					}
 				}
 				nd.txt = tinymce.translate(d.text);
-				if (d.text=='|') {
+				if (d.text=='|' || d.text=='-') {
 					nd.isSeparator = true;
 				}
 				

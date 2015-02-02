@@ -211,6 +211,10 @@
 		}
 	});
 
+	createClass('mainmenu',cav.classes.menuitem,{
+		html:'<li class="wd-menuitem wd-mainmenu" />'
+	});
+
 	createClass('tabgroup',baseelm,{
 		html:'<div class="wd-tabgrp" />',
 		preInit:function() {},
@@ -572,6 +576,14 @@
 		},
 		createBaseMenu: function() {
 			var m = this.addMenu([
+				new cav.classes.mainmenu({txt:'main',items:[
+					new menuItem({
+						txt:'logout',
+						items:[new menuItem({txt:'sub logout'})],
+						click:function() {
+							alert('logout');
+						}})
+				]}),
 				new menuItem({txt:'file',items:[
 					new menuItem({
 						txt:'logout',
