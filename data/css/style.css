@@ -191,9 +191,12 @@ body {
 		.wd-button {
 			border: solid 1px transparent;
 			cursor: pointer;
-			padding: 10px;
+			padding: 9px 10px;
 			float: left;
 			margin-right: 2px;
+		}
+		.wd-button .fa {
+			font-size: 13px;
 		}
 		.wd-button:hover, .wd-button.wd-active {
 			background-color: #FFF;
