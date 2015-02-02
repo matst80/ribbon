@@ -441,8 +441,8 @@ tinymce.ThemeManager.add('cavagent', function(editor) {
 					if (d[i])
 						val = d[i];
 					if (val) {
-						if (settingItems.indexOf(i))
-							sett[i] = val;
+						
+						sett[i] = val;
 						nd[menuMapping[i]] = val;
 					}
 				}

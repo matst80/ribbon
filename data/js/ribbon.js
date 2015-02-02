@@ -214,7 +214,7 @@
 		},
 		active:function(v) {
 			var t = this;
-			console.trace('active',v);
+			console.trace('menu active',v);
 			if (v!=undefined) {
 				t._active = v;
 				t.elm.toggleClass(t.activeClass,v);
@@ -226,24 +226,25 @@
 			var s = t.settings;
 
 			function mceFix() {
+				
 				s.disabled = function(v) {
 					if (v!=undefined)
 						t.disabled = v;
 					return t._disabled;
 				}
 				s.active = function(v) {
-					console.log('active',v);
+					console.log('button active',v);
 					t.active(v);
 				}
-				s.settings = s;
-				s.parent = function() {
-					console.log(t.parentNode.elm[0],t.elm[0]);
-					return t.elm;
-					
+				//console.log('menusettings',s);
+				
+				s.parent = function() {				
 					if (t.parentNode)
 						return t.parentNode.elm;
 					return t.elm.parent().parent();
 				}
+
+				s.settings = s;
 			}
 
 			function stopProp(e) {
@@ -264,7 +265,7 @@
 					s.textStyle();
 				}
 				t.elm.bind('mousedown',stopProp).bind('mouseup',stopProp);
-				//t.elm.bind('mouseup',stopProp);
+				
 			}
 			t.elm.bind('mouseenter',function() { t.elm.trigger('show');}).bind('mouseleave',function() { t.elm.trigger('hide');});
 		},
@@ -285,6 +286,7 @@
 					t.txtElm.addClass('fa fa-'+iconMap(s.icon));
 				}
 			}
+			t.afterAdded();
 			
 		}
 	});
