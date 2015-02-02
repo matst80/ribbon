@@ -63,6 +63,9 @@ body {
 			display: block;
 			/*border-right: 1px solid #3d5560;*/
 		}
+		.wd-submenu .wd-menuitem .wd-menu-label {
+			padding: 10px 20px;
+		}
 		.wd-menuitem {
 			position: relative;
 		}
@@ -70,13 +73,13 @@ body {
 	        position:absolute;
 	        font-family: 'FontAwesome';
 	        right:10px;
-	        font-size: 15px;
+	        font-size: 10px;
 	        color: #FFF;
 	        top: 50%;
-	        margin-top: -7px;
+	        margin-top: -5px;
 	        display: block;
-	        height: 15px;
-	        width: 15px;
+	        height: 10px;
+	        width: 10px;
 	        content: "\f078"; 
 	    }
 		.wd-menuitem .wd-menu-label:hover {
@@ -308,7 +311,7 @@ body {
 			background: #EBF8FF;
 			padding: 10px;
 			position: relative;
-			margin-bottom: 10px;
+			margin-bottom: 15px;
 			box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
 		}
 		.wd-notification:after {
@@ -321,7 +324,10 @@ body {
 			border-width: 10px 10px 0 10px;
 			border-color: #EBF8FF transparent transparent transparent;
 		}
-
+		.wd-notification.wd-warning {
+			background: #f1783c;
+			color: #FFF;
+		}
 		.cf:after { 
 		   content: "."; 
 		   visibility: hidden; 
@@ -346,9 +352,9 @@ body {
 		}
 		.mce-edit-focus {
 			border: 1px solid #00A6FF;
-			-webkit-box-shadow: 0px 0px 5px 0px rgba(0, 166, 255, 0.5);
-			-moz-box-shadow:    0px 0px 5px 0px rgba(0, 166, 255, 0.5);
-			box-shadow:         0px 0px 5px 0px rgba(0, 166, 255, 0.5);
+			-webkit-box-shadow: 0px 0px 8px 0px rgba(0, 166, 255, 0.5);
+			-moz-box-shadow:    0px 0px 8px 0px rgba(0, 166, 255, 0.5);
+			box-shadow:         0px 0px 8px 0px rgba(0, 166, 255, 0.5);
 			-webkit-border-radius: 3px;
 			-moz-border-radius: 3px;
 			border-radius: 3px;
