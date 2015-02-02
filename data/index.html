@@ -176,7 +176,7 @@
 	<script src="//tinymce.cachefly.net/4.1/tinymce.min.js"></script>
 </head>
 <body>
-<div class="editor">
+<div class="editor" id="re1" data-editor="richedit">
 	<h1>Rubrik</h1>
 	<p>
 		Här kommer lite text
@@ -198,6 +198,12 @@
 		<i>Kursiv</i>
 	</p>
 </div>
+<div id="phtest" data-editor="placeholder">
+<div id="re2" data-editor="richedit">
+<p></p>
+<img src="/bg.jpg" alt="bild" style="width:200px;" data-editor="image" id="img1" />
+</div>
+
 <script type="text/javascript">
 	var wdpid = 1;
 	ql.load('/js/jquery-2.1.3.min.js','/js/ribbon.js',function() {
