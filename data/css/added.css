@@ -1,0 +1,9 @@
+.wd-buttongroup {
+			border:solid 1px transparent;
+			float:left;
+			margin-right: 5px;
+		}
+
+		.wd-buttongroup .wd-button {
+			float:left;
+		}
