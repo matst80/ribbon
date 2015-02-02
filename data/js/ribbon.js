@@ -180,17 +180,20 @@
 
 		
 	createClass('notificationcenter',baseelm,{
-		html:'<ul class="wd-notificationholder" />'
+		html:'<div class="wd-notificationholder" />'
 	});
 
 	createClass('notification',baseelm,{
-		html:'<li class="wd-notification" />',
+		html:'<div class="wd-notification" />',
+		close:function() {
+			this.elm.remove();
+		},
 		createInner:function() {
 			var t = this,
 				s = t.settings,
 				txt = trans(s.txt||t.defaultText);
 			
-				t.txtElm = $('<span class="wd-item-label wd-notificationtext" />').text(txt).appendTo(t.elm);
+				t.txtElm = $('<span class="wd-item-label wd-notificationtext" />').text(txt).appendTo(t.elm.click(function() {t.close();}));
 			
 		}
 	});
@@ -217,6 +220,7 @@
 			}
 			if (s.isMce) {
 				var me = t.elm[0];
+				console.log(s);
 				/*me.parent = function() {
 					console.trace(this);
 					return {
@@ -239,7 +243,23 @@
 	});
 
 	createClass('mainmenu',cav.classes.menuitem,{
-		html:'<li class="wd-menuitem wd-mainmenu" />'
+		html:'<li class="wd-menuitem wd-mainmenu" />',
+		toggleSub:function() {
+			t.flyout.toggleClass('wd-showflyout');
+		},
+		close:function() {
+			t.flyout.removeClass('wd-showflyout');	
+		},
+		open:function() {
+			t.flyout.addClass('wd-showflyout');
+		},
+		isOpen:function() {
+			return t.flyout.hasClass('wd-showflyout');
+		},
+		createInner:function() {
+			var t = this;
+			t.flyout = $('<div class="wd-mainflyout" />').appendTo(t.elm.click(function() {}));
+		}
 	});
 
 	createClass('tabgroup',baseelm,{
