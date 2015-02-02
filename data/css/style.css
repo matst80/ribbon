@@ -90,7 +90,7 @@ body {
 		.wd-menuitem {
 			cursor: pointer;
 		}
-		.wd-menu .wd-menuitem .wd-hassub >.wd-menu-label:before {
+		.wd-menuitem .wd-hassub >.wd-menu-label:before, .wd-menubutton .wd-hassub >.wd-menu-label:before {
 	        position:absolute;
 	        font-family: 'FontAwesome';
 	        right:10px;
@@ -103,7 +103,7 @@ body {
 	        width: 15px;
 	        content: "\f054"; 
 	    }
-	    .wd-menu >.wd-menuitem .wd-hassub >.wd-menu-label:hover:before {
+	    .wd-hassub >.wd-menu-label:hover:before {
 	        color: #FFF;
 	    }
 		/*.wd-menuitem:hover {
@@ -272,4 +272,14 @@ body {
 		.wd-li-left li {
 			display: block;
 			float:left;
+		}
+		.mce-edit-focus {
+			border: 1px solid #00A6FF;
+			-webkit-box-shadow: 0px 0px 5px 0px rgba(0, 166, 255, 0.5);
+			-moz-box-shadow:    0px 0px 5px 0px rgba(0, 166, 255, 0.5);
+			box-shadow:         0px 0px 5px 0px rgba(0, 166, 255, 0.5);
+			-webkit-border-radius: 3px;
+			-moz-border-radius: 3px;
+			border-radius: 3px;
+			outline: 0!important;
 		}
