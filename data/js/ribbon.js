@@ -242,23 +242,27 @@
 		}
 	});
 
-	createClass('mainmenu',cav.classes.menuitem,{
+	createClass('mainmenu',baseelm,{
 		html:'<li class="wd-menuitem wd-mainmenu" />',
 		toggleSub:function() {
-			t.flyout.toggleClass('wd-showflyout');
+			this.flyout.toggleClass('wd-showflyout');
 		},
 		close:function() {
-			t.flyout.removeClass('wd-showflyout');	
+			this.flyout.removeClass('wd-showflyout');	
 		},
 		open:function() {
-			t.flyout.addClass('wd-showflyout');
+			this.flyout.addClass('wd-showflyout');
 		},
 		isOpen:function() {
-			return t.flyout.hasClass('wd-showflyout');
+			return this.flyout.hasClass('wd-showflyout');
+		},
+		childContainer:function() {
+			return this.subelm;
 		},
 		createInner:function() {
 			var t = this;
-			t.flyout = $('<div class="wd-mainflyout" />').appendTo(t.elm.click(function() {}));
+			var fl = t.flyout = $('<div class="wd-mainflyout" />').appendTo(t.elm.click(function() {}));
+			t.subelm = $('<ul class="wd-flyoutmenu" />').appendTo(fl);
 		}
 	});
 

@@ -21,3 +21,11 @@
 		.wd-notification {
 			background-color: #ccc;
 		}
+
+		.wd-mainflyout {
+			display: none;
+		}
+
+		.wd-showflyout .wd-mainflyout {
+			display: block;
+		}
