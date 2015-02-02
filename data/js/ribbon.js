@@ -245,16 +245,16 @@
 	createClass('mainmenu',baseelm,{
 		html:'<li class="wd-menuitem wd-mainmenu" />',
 		toggleSub:function() {
-			this.flyout.toggleClass('wd-showflyout');
+			this.elm.toggleClass('wd-showflyout');
 		},
 		close:function() {
-			this.flyout.removeClass('wd-showflyout');	
+			this.elm.removeClass('wd-showflyout');	
 		},
 		open:function() {
-			this.flyout.addClass('wd-showflyout');
+			this.elm.addClass('wd-showflyout');
 		},
 		isOpen:function() {
-			return this.flyout.hasClass('wd-showflyout');
+			return this.elm.hasClass('wd-showflyout');
 		},
 		childContainer:function() {
 			return this.subelm;
@@ -262,7 +262,9 @@
 		createInner:function() {
 			var t = this;
 			t.elm.append($('<span class="wd-menu-label wd-item-label" />').text(trans(this.settings.txt,this.settings.defaultText)));
-			var fl = t.flyout = $('<div class="wd-mainflyout" />').appendTo(t.elm.click(function() {}));
+			var fl = t.flyout = $('<div class="wd-mainflyout" />').appendTo(t.elm.click(function() {
+				t.toggleSub();
+			}));
 			t.subelm = $('<ul class="wd-flyoutmenu" />').appendTo(fl);
 		}
 	});

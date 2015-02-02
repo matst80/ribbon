@@ -29,3 +29,8 @@
 		.wd-showflyout .wd-mainflyout {
 			display: block;
 		}
+
+		.wd-flyoutmenu {
+			position: absolute;
+			background-color: #fff;
+		}
