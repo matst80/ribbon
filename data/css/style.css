@@ -32,7 +32,7 @@ body {
 			list-style: none;
 		}
 		.wd-menuitem.wd-mainmenu >.wd-menu-label {
-			padding: 15px 20px 15px 40px;
+			padding: 12px 20px 12px 40px;
 			background: #2ba1e1;
 		}
 		.wd-menuitem.wd-mainmenu:hover >.wd-menu-label {
@@ -60,7 +60,7 @@ body {
 			background: #2B4049;
 		}
 		.wd-menuitem .wd-menu-label {
-			padding:15px 30px 15px 30px;
+			padding:12px 30px 12px 30px;
 			display: block;
 			position: relative;
 			/*border-right: 1px solid #3d5560;*/
@@ -216,6 +216,9 @@ body {
 		.wd-button:hover, .wd-button.wd-active {
 			background-color: #FFF;
 			border: 1px solid #DDD;
+		}
+		.wd-button.wd-active .fa {
+			color: #2ba1e1;
 		}
 		.wd-button:active {
 			background-color: #ddd;
