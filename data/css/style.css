@@ -398,7 +398,6 @@ body {
 			line-height: 35px;
 			padding: 0 10px;
 			border: 1px solid #DDD;
-			border-radius: 3px;
 		}
 		.wd-textinput input[type=text]:focus {
 			border: 1px solid #2ba1e1;
@@ -414,7 +413,6 @@ body {
 			height: 35px;
 			padding: 0 10px;
 			border: 1px solid #DDD;
-			border-radius: 3px;
 		}
 
 
