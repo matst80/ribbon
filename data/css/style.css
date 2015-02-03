@@ -92,8 +92,12 @@ body {
 	        content: "\f078"; 
 	        z-index: 20;
 	    }
-		.wd-menuitem .wd-menu-label:hover {
+		.wd-menuitem:hover{
 			background:#3d5560;
+			color: #FFF;
+		}
+		.wd-submenu .wd-menuitem:hover >.wd-menu-label, .wd-submenu .wd-menuitem:hover >.wd-menu-label:before {
+			color: #FFF;
 		}
 		.wd-menuitem.wd-active .wd-menu-label {
 			background: #FFF;
