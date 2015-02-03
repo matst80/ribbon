@@ -524,25 +524,28 @@ div.@{prefix}-tinymce-inline {
 .@{prefix}-fullscreen {
 	border: 0; padding: 0; margin: 0;
 	overflow: hidden;
-	background: @window-fullscreen-bg;
-	height: 100%;
+	background: @window-fullscreen-bg;   
+	height: 100%; 
+}
+.test {
+	margin-top: 1px;
 }
 
 div.@{prefix}-fullscreen {
 	position: fixed;
-	top: 0; left: 0;
-}
+	top: 0; left: 0;   
+}   
 
 #@{prefix}-modal-block {
-	.opacity(0);
-	position: fixed;
+	.opacity(0); 
+	position: fixed; 
 	left: 0; top: 0;
 	width: 100%; height: 100%;
 	background: @window-modalblock-bg;
 }
 
 #@{prefix}-modal-block.@{prefix}-in {
-	.opacity(@window-modalblock-opacity);
+	.opacity(@window-modalblock-opacity); 
 }
 
 .@{prefix}-window-move {
